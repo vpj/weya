@@ -26,6 +26,11 @@ List of HTML elements
      htmlVoid: 'area base br col command embed hr img input keygen link meta param
       source track wbr'
 
+Wrapper for browser API
+
+    Api =
+     document: @document
+
 
 #Weya DOM
 
@@ -35,11 +40,6 @@ Weya object to be passed as `this`
 
      weya =
       _elem: null
-
-Wrapper for browser API
-
-     Api =
-      document: @document
 
 Manipulating dom objects
 
@@ -252,6 +252,8 @@ Append a child element
       if attrs?
        setAttributes buf, attrs
 
+Can close void elements (element that self close) with a `/>`
+
       buf.push ">\n"
       @_indent++
 
@@ -287,15 +289,12 @@ Initialize
      return weya
 
 
-
-
-#Weya
+#Weya API
 
     weyaDom = weyaDomCreate()
     weyaMarkup = weyaMarkupCreate()
 
 Create and append to `options.elem`. If `options.context` is provied it can be accessed via `@$`.
-
 If `options.elem` is `null`, the element is created but not appended.
 
     @Weya = Weya = (options, func) ->
