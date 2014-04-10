@@ -9,7 +9,7 @@ Create a sample div
       @div "#name.col-md-6", ->
        @span "Name"
        @span @$.name
-      @div "#age.col-md-6", ->
+      @div "#age.col-md-6", style: {background: "red"}, ->
        @span "Age"
        @span "#{@$.age}"
        @input "#ageInput", type: "text", null
