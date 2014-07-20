@@ -4,7 +4,7 @@
     Weya = @Weya
 
 ##Weya.Base
-Introduces class level function initialize and include. This class is the base class of all other classes in Sweet.JS
+Introduces class level function initialize and include.
 
     class Base
      _initialize: []
@@ -22,7 +22,8 @@ Introduces class level function initialize and include. This class is the base c
      on: {}
 
 ####Register initialize functions.
-All initializer funcitons in subclasses  will be called with the constructor arguments.
+All initializer funcitons in subclasses will be called with the constructor
+arguments.
 
      @initialize: (func) ->
       inits = @::_initialize
@@ -38,7 +39,8 @@ All initializer funcitons in subclasses  will be called with the constructor arg
       return
 
 ####Include objects.
-You can include objects by registering them with @include. This tries to solve the problem of single inheritence.
+You can include objects by registering them with @include. This tries to
+solve the problem of single inheritence.
 
      @include: (obj) ->
       for k, v of obj

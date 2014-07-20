@@ -28,12 +28,17 @@ Routing with hash tags or pushState
      _routes: {}
 
 ####Register router
+
 `'analyse/:analysis': 'onAnalyse'`
+
 `dashboard': ['auth', 'dashboard']`
-This will match urls of the form `analyse/\*` and call method @onAnalyse with the parameter.
-Second route will first call @auth and and call @dashboard only if it returns true
-The most specific route should be at bottom
-Routers can added or overridden in subclasses
+
+This will match urls of the form `analyse/\*` and call method @onAnalyse
+with the parameter. Second route will first call @auth if it returns
+`true` @dashboard will be called.
+
+The most specific route should be at bottom. Routers can added or overridden
+in subclasses
 
      @routes: (routes) ->
       @::_routes = _.clone @::_routes
@@ -80,9 +85,15 @@ Handle state
        if @_event?.type is "popstate"
         @_history.pop()
         if @_history.length is 0
-         @_history.push fragment: fragment, title: document.title, state: @getState()
+         @_history.push
+          fragment: fragment
+          title: document.title
+          state: @getState()
        else
-        @_history.push fragment: fragment, title: document.title, state: @getState()
+        @_history.push
+         fragment: fragment
+         title: document.title
+         state: @getState()
 
 Calls callbacks in order
 
@@ -108,7 +119,10 @@ Calls callbacks in order
       if options.replace
        @_history.pop()
       if not options.trigger
-       @_history.push fragment: fragment, title: options.title, state: options.state
+       @_history.push
+        fragment: fragment
+        title: options.title
+        state: options.state
 
       Weya.history.navigate fragment, options
 
@@ -234,7 +248,10 @@ Get the URL fragment
       @_wantsPushState = @_emulateState is off and @options.pushState is on
       @_hasPushState = @_wantsPushState is on and @history?.pushState?
       if @_emulateState and @options.start?
-       @pushEmulateState @options.start.state, @options.start.title, @options.start.fragment
+       @pushEmulateState
+        @options.start.state
+        @options.start.title
+        @options.start.fragment
 
       @fragment = @getFragment()
 

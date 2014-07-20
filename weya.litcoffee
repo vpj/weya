@@ -1,30 +1,31 @@
 List of SVG elements
 
     Tags =
-     svg: 'a altGlyph altGlyphDef altGlyphItem animate animateColor animateMotion
-      animateTransform circle clipPath color-profile cursor defs desc ellipse
-      feBlend feColorMatrix feComponentTransfer feComposite feConvolveMatrix
-      feDiffuseLighting feDisplacementMap feDistantLight feFlood feFuncA feFuncB
-      feFuncG feFuncR feGaussianBlur feImage feMerge feMergeNode feMorphology
-      feOffset fePointLight feSpecularLighting feSpotLight feTile feTurbulence
+     svg: 'a altGlyph altGlyphDef altGlyphItem animate animateColor
+      animateMotion animateTransform circle clipPath color-profile cursor
+      defs desc ellipse feBlend feColorMatrix feComponentTransfer
+      feComposite feConvolveMatrix feDiffuseLighting feDisplacementMap
+      feDistantLight feFlood feFuncA feFuncB feFuncG feFuncR feGaussianBlur
+      feImage feMerge feMergeNode feMorphology feOffset fePointLight
+      feSpecularLighting feSpotLight feTile feTurbulence
       filter font font-face font-face-format font-face-name font-face-src
-      font-face-uri foreignObject g glyph glyphRef hkern image line linearGradient
-      marker mask metadata missing-glyph mpath path pattern polygon polyline
-      radialGradient rect script set stop style svg symbol text textPath
-      title tref tspan use view vkern switch foreignObject'
+      font-face-uri foreignObject g glyph glyphRef hkern image line
+      linearGradient marker mask metadata missing-glyph mpath path pattern
+      polygon polyline radialGradient rect script set stop style svg symbol
+      text textPath title tref tspan use view vkern switch foreignObject'
 
 List of HTML elements
 
      html: 'a abbr address article aside audio b bdi bdo blockquote body button
-      canvas caption cite code colgroup datalist dd del details dfn div dl dt em
-      fieldset figcaption figure footer form h1 h2 h3 h4 h5 h6 head header hgroup
-      html i iframe ins kbd label legend li main map mark menu meter nav noscript object
-      ol optgroup option output p pre progress q rp rt ruby s samp script section
-      select small span strong style sub summary sup table tbody td textarea tfoot
-      th thead time title tr u ul video'
+      canvas caption cite code colgroup datalist dd del details dfn div dl dt
+      em fieldset figcaption figure footer form h1 h2 h3 h4 h5 h6 head header
+      hgroup html i iframe ins kbd label legend li main map mark menu meter
+      nav noscript object ol optgroup option output p pre progress q rp rt
+      ruby s samp script section select small span strong style sub summary
+      sup table tbody td textarea tfoot th thead time title tr u ul video'
 
-     htmlVoid: 'area base br col command embed hr img input keygen link meta param
-      source track wbr'
+     htmlVoid: 'area base br col command embed hr img input keygen link meta
+      param source track wbr'
 
 Wrapper for browser API
 
@@ -295,8 +296,9 @@ Initialize
     weyaDom = weyaDomCreate()
     weyaMarkup = weyaMarkupCreate()
 
-Create and append to `options.elem`. If `options.context` is provied it can be accessed via `@$`.
-If `options.elem` is `null`, the element is created but not appended.
+Create and append to `options.elem`. If `options.context` is provied it can be
+accessed via `@$`. If `options.elem` is `null`, the element is created but
+not appended.
 
     @Weya = Weya = (options, func) ->
      weya = weyaDom
