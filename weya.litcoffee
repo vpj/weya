@@ -11,7 +11,7 @@ List of SVG elements
       font-face-uri foreignObject g glyph glyphRef hkern image line linearGradient
       marker mask metadata missing-glyph mpath path pattern polygon polyline
       radialGradient rect script set stop style svg symbol text textPath
-      title tref tspan use view vkern'
+      title tref tspan use view vkern switch foreignObject'
 
 List of HTML elements
 
@@ -70,16 +70,16 @@ Parse id and class string
      parseIdClass = (str) ->
       res =
        id: null
-       class: null
+       class: []
 
       for c, i in str.split "."
        if c.indexOf("#") is 0
         res.id = c.substr 1
        else if c isnt ""
         if not res.class?
-         res.class = c
+         res.class = [c]
         else
-         res.class += " #{c}"
+         res.class.push c
 
       return res
 
@@ -123,7 +123,8 @@ Keep a reference of `elem` to return at the end of the function
        if idClass.id?
         elem.id = idClass.id
        if idClass.class?
-        elem.className = idClass.class
+        for c in idClass.class
+         elem.classList.add c
 
       if attrs?
        setAttributes elem, attrs
@@ -152,7 +153,7 @@ Initialize
       weya[name] = wrapAppend "http://www.w3.org/2000/svg", name
 
      for name in Tags.html.split ' '
-      weya[name] = wrapAppend null, name
+      weya[name] = wrapAppend "http://www.w3.org/1999/xhtml", name
 
      for name in Tags.htmlVoid.split ' '
       weya[name] = wrapAppend null, name
@@ -320,3 +321,5 @@ If `options.elem` is `null`, the element is created but not appended.
      weya.$ = pContext
      return buf.join ''
 
+    if module?
+     module.exports = Weya
