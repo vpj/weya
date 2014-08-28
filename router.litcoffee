@@ -248,8 +248,7 @@ Get the URL fragment
       @_wantsPushState = @_emulateState is off and @options.pushState is on
       @_hasPushState = @_wantsPushState is on and @history?.pushState?
       if @_emulateState and @options.start?
-       @pushEmulateState
-        @options.start.state
+       @pushEmulateState @options.start.state,
         @options.start.title
         @options.start.fragment
 

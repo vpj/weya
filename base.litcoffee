@@ -16,10 +16,14 @@ Introduces class level function initialize and include.
       @::on = {}
       @::on[k] = v for k, v of events
 
+     @get: (name, func) ->
+      @::__defineGetter__ name, func
+
+     @set: (name, func) ->
+      @::__defineSetter__ name, func
+
      constructor: ->
       @_init.apply @, arguments
-
-     on: {}
 
 ####Register initialize functions.
 All initializer funcitons in subclasses will be called with the constructor
