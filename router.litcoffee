@@ -101,7 +101,8 @@ Calls callbacks in order
        callbacks = [callbacks] if not Array.isArray callbacks
 
        for callback in callbacks
-        callback = @[callback]
+        if (typeof callback) is 'string'
+         callback = @[callback]
         break unless callback.apply this, args
 
 ####Gets the current HTML5 History state
