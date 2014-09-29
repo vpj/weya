@@ -10,14 +10,24 @@ Introduces class level function initialize and include.
      _initialize: []
      on: {}
 
+Extend Events
+
      @extend: ->
-      @::_initialize = @::_initialize.slice()
       events = @::on
       @::on = {}
       @::on[k] = v for k, v of events
 
+Add event listeners
+
+     @listen: (name, func) ->
+      @::on[name] = func
+
+Getter
+
      @get: (name, func) ->
       @::__defineGetter__ name, func
+
+Setter
 
      @set: (name, func) ->
       @::__defineSetter__ name, func
@@ -30,10 +40,7 @@ All initializer funcitons in subclasses will be called with the constructor
 arguments.
 
      @initialize: (func) ->
-      inits = @::_initialize
-      @::_initialize = []
-      for v in inits
-       @::_initialize.push v
+      @::_initialize = @::_initialize.slice()
       @::_initialize.push func
 
      _init: ->
