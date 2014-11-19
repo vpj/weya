@@ -124,8 +124,11 @@ Keep a reference of `elem` to return at the end of the function
        if idClass.id?
         elem.id = idClass.id
        if idClass.class?
+        className = ''
         for c in idClass.class
-         elem.classList.add c
+         className += ' ' if className isnt ''
+         className += "#{c}"
+        elem.className = className
 
       if attrs?
        setAttributes elem, attrs
@@ -322,6 +325,10 @@ not appended.
      weya._buf = pBuf
      weya.$ = pContext
      return buf.join ''
+
+    Weya.setApi = (api) ->
+     for k, v of api
+      Api[k] = v
 
     if module?
      module.exports = Weya
