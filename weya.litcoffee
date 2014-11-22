@@ -124,11 +124,15 @@ Keep a reference of `elem` to return at the end of the function
        if idClass.id?
         elem.id = idClass.id
        if idClass.class?
-        className = ''
-        for c in idClass.class
-         className += ' ' if className isnt ''
-         className += "#{c}"
-        elem.className = className
+        if elem.classList?
+         for c in idClass.class
+          elem.classList.add c
+        else #For older browsers; does not work with svgs
+         className = ''
+         for c in idClass.class
+          className += ' ' if className isnt ''
+          className += "#{c}"
+         elem.className = className
 
       if attrs?
        setAttributes elem, attrs
