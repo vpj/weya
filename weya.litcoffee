@@ -141,7 +141,7 @@ Keep a reference of `elem` to return at the end of the function
        pElem.appendChild elem
 
       if contentFunction?
-       contentFunction.call @
+       contentFunction.call this
       else if contentText?
        elem.textContent = contentText
 
@@ -152,7 +152,7 @@ Wrap `append`
 
      wrapAppend = (ns, name) ->
       ->
-       append.call @, ns, name, arguments
+       append.call this, ns, name, arguments
 
 
 Initialize
@@ -267,7 +267,7 @@ Can close void elements (element that self close) with a `/>`
       @_indent++
 
       if contentFunction?
-       contentFunction.call @
+       contentFunction.call this
       else if contentText?
        setIndent buf, @_indent
        buf.push contentText
@@ -281,7 +281,7 @@ Wrap `append`
 
      wrapAppend = (ns, name) ->
       ->
-       append.call @, ns, name, arguments
+       append.call this, ns, name, arguments
 
 
 Initialize
