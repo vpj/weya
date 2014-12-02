@@ -33,7 +33,7 @@ Setter
       @::__defineSetter__ name, func
 
      constructor: ->
-      @_init.apply @, arguments
+      @_init.apply this, arguments
 
 ####Register initialize functions.
 All initializer funcitons in subclasses will be called with the constructor
@@ -45,7 +45,7 @@ arguments.
 
      _init: ->
       for init in @_initialize
-       init.apply @, arguments
+       init.apply this, arguments
 
       return
 
