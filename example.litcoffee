@@ -15,8 +15,8 @@ Create a sample div
        @input "#ageInput", type: "text", null
 
      render: ->
-      console.log Weya.markup context: @, @template
-      Weya elem: document.body, context: @, @template
+      console.log Weya.markup context: this, @template
+      Weya elem: document.body, context: this, @template
 
 
     student = new Student "Varuna", 26
