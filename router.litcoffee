@@ -139,7 +139,7 @@ Convert a route string into a regular expression, suitable for matching
       route = route.replace @escapeRegExp, '\\$&'
                    .replace @noptionalParam, '(?:$1)?'
                    .replace @namedParam, (match, optional) ->
-                     if optional then match else '([^\/]+)'
+                    if optional then match else '([^\/]+)'
                    .replace @splatParam, '(.*?)'
 
        return new RegExp "^#{route}$"
@@ -265,7 +265,7 @@ Depending on whether we're using pushState or hashes, and whether
       if @_hasPushState
        $(window).on 'popstate', @checkUrl
       else if @_wantsHashChange and window.onhashchange?
-       @(window).on 'hashchange', @checkUrl
+       $(window).on 'hashchange', @checkUrl
       else if @_wantsHashChange
        @_checkUrlInterval = setInterval @checkUrl, @interval
 
