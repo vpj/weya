@@ -62,7 +62,7 @@ solve the problem of single inheritence.
          for event, listener of v
           @::on[event] = listener
         else
-         @::[k] = v
+         @prototype[k] = v
 
      @initialize ->
       events = @on
