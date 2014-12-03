@@ -32,6 +32,48 @@ Wrapper for browser API
     Api =
      document: @document
 
+Parse id and class string
+
+    parseIdClass = (str) ->
+     res =
+      id: null
+      class: []
+
+     for c, i in str.split "."
+      if c.indexOf("#") is 0
+       res.id = c.substr 1
+      else if c isnt ""
+       if not res.class?
+        res.class = [c]
+       else
+        res.class.push c
+
+     return res
+
+
+    getParameters = (args) ->
+     params =
+      idClass: null
+      text: null
+      attrs: null
+      func: null
+
+     for arg, i in args
+      switch typeof arg
+       when 'function' then params.func = arg
+       when 'object' then params.attrs = arg
+       when 'string'
+        if args.length is 1
+         params.text = arg
+        else
+         c = arg.charAt 0
+
+         if i is 0 and (c is '#' or c is '.')
+          params.idClass = parseIdClass arg
+         else
+          params.text = arg
+
+     return params
 
 #Weya DOM
 
@@ -66,47 +108,12 @@ Manipulating dom objects
          else
           elem.removeAttribute k
 
-Parse id and class string
-
-     parseIdClass = (str) ->
-      res =
-       id: null
-       class: []
-
-      for c, i in str.split "."
-       if c.indexOf("#") is 0
-        res.id = c.substr 1
-       else if c isnt ""
-        if not res.class?
-         res.class = [c]
-        else
-         res.class.push c
-
-      return res
 
 
 Append a child element
 
      append = (ns, name, args) ->
-      idClass = null
-      contentText = null
-      attrs = null
-      contentFunction = null
-
-      for arg, i in args
-       switch typeof arg
-        when 'function' then contentFunction = arg
-        when 'object' then attrs = arg
-        when 'string'
-         if args.length is 1
-          contentText = arg
-         else
-          c = arg.charAt 0
-
-          if i is 0 and (c is '#' or c is '.')
-           idClass = arg
-          else
-           contentText = arg
+      params = getParameters args
 
 Keep a reference to parent element
 
@@ -119,31 +126,30 @@ Keep a reference of `elem` to return at the end of the function
       else
        elem = @_elem = Api.document.createElement name
 
-      if idClass?
-       idClass = parseIdClass idClass
-       if idClass.id?
-        elem.id = idClass.id
-       if idClass.class?
+      if params.idClass?
+       if params.idClass.id?
+        elem.id = params.idClass.id
+       if params.idClass.class?
         if elem.classList?
-         for c in idClass.class
+         for c in params.idClass.class
           elem.classList.add c
         else #For older browsers; does not work with svgs
          className = ''
-         for c in idClass.class
+         for c in params.idClass.class
           className += ' ' if className isnt ''
           className += "#{c}"
          elem.className = className
 
-      if attrs?
-       setAttributes elem, attrs
+      if params.attrs?
+       setAttributes elem, params.attrs
 
       if pElem?
        pElem.appendChild elem
 
-      if contentFunction?
-       contentFunction.call this
-      else if contentText?
-       elem.textContent = contentText
+      if params.func?
+       params.func.call this
+      else if params.text?
+       elem.textContent = params.text
 
       @_elem = pElem
       return elem
@@ -203,47 +209,10 @@ Render components
       for i in [0...indent]
        buf.push " "
 
-Parse id and class string
-
-     parseIdClass = (str) ->
-      res =
-       id: null
-       class: null
-
-      for c, i in str.split "."
-       if c.indexOf("#") is 0
-        res.id = c.substr 1
-       else if c isnt ""
-        if not res.class?
-         res.class = c
-        else
-         res.class += " #{c}"
-
-      return res
-
-
 Append a child element
 
      append = (ns, name, args) ->
-      idClass = null
-      contentText = null
-      attrs = null
-      contentFunction = null
-
-      for arg, i in args
-       switch typeof arg
-        when 'function' then contentFunction = arg
-        when 'object' then attrs = arg
-        when 'string'
-         if args.length is 1
-          contentText = arg
-         else
-          c = arg.charAt 0
-
-          if i is 0 and (c is '#' or c is '.')
-           idClass = arg
-          else
-           contentText = arg
+      params = getParameters args
 
       buf = @_buf
 
@@ -251,26 +220,25 @@ Append a child element
 
       buf.push "<#{name}"
 
-      if idClass?
-       idClass = parseIdClass idClass
-       if idClass.id?
-        buf.push " id=\"#{idClass.id}\""
-       if idClass.class?
-        buf.push " class=\"#{idClass.class}\""
+      if params.idClass?
+       if params.idClass.id?
+        buf.push " id=\"#{params.idClass.id}\""
+       if params.idClass.class?
+        buf.push " class=\"#{params.idClass.class}\""
 
-      if attrs?
-       setAttributes buf, attrs
+      if params.attrs?
+       setAttributes buf, params.attrs
 
 Can close void elements (element that self close) with a `/>`
 
       buf.push ">\n"
       @_indent++
 
-      if contentFunction?
-       contentFunction.call this
-      else if contentText?
+      if params.func?
+       params.func.call this
+      else if params.text?
        setIndent buf, @_indent
-       buf.push contentText
+       buf.push params.text
        buf.push "\n"
 
       @_indent--
