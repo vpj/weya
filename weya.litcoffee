@@ -108,6 +108,21 @@ Manipulating dom objects
          else
           elem.removeAttribute k
 
+     setIdClass = (elem, idClass) ->
+      if idClass.id?
+       elem.id = idClass.id
+
+      if idClass.class?
+       if elem.classList?
+        for c in idClass.class
+         elem.classList.add c
+       else #For older browsers; does not work with svgs
+        className = ''
+        for c in idClass.class
+         className += ' ' if className isnt ''
+         className += "#{c}"
+        elem.className = className
+
 
 
 Append a child element
@@ -127,18 +142,7 @@ Keep a reference of `elem` to return at the end of the function
        elem = @_elem = Api.document.createElement name
 
       if params.idClass?
-       if params.idClass.id?
-        elem.id = params.idClass.id
-       if params.idClass.class?
-        if elem.classList?
-         for c in params.idClass.class
-          elem.classList.add c
-        else #For older browsers; does not work with svgs
-         className = ''
-         for c in params.idClass.class
-          className += ' ' if className isnt ''
-          className += "#{c}"
-         elem.className = className
+       setIdClass elem, params.idClass
 
       if params.attrs?
        setAttributes elem, params.attrs
