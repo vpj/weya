@@ -10,12 +10,15 @@ Introduces class level function initialize and include.
      _initialize: []
      on: {}
 
+     _extended: true
+
 Extend Events
 
      @extend: ->
       events = @::on
       @::on = {}
       @::on[k] = v for k, v of events
+      @::_extended = true
 
 Add event listeners
 
@@ -40,6 +43,11 @@ All initializer funcitons in subclasses will be called with the constructor
 arguments.
 
      @initialize: (func) ->
+      #if not @::_extended
+      # throw new Error 'Class not extended'
+
+      @::_extended = false
+
       @::_initialize = @::_initialize.slice()
       @::_initialize.push func
 

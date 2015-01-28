@@ -20,6 +20,8 @@ Routing with hash tags or pushState
      splatParam: /\*\w+/g
      escapeRegExp: /[\-{}\[\]+?.,\\\^$|#\s]/g
 
+     @extend()
+
      @initialize ->
       @_bindRoutes()
       @_event = null
@@ -154,6 +156,7 @@ Extract parameters from a route regex and URL
 ## History class
 
     class History extends Weya.Base
+     @extend()
 
 Strip leading hash/slash and trailing space
 
