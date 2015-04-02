@@ -1,4 +1,4 @@
-List of SVG elements
+Gist of SVG elements
 
     Tags =
      svg: 'a altGlyph altGlyphDef altGlyphItem animate animateColor
@@ -286,10 +286,10 @@ not appended.
      helpersAdded = []
 
      if options.helpers?
-      for name, func of options.helpers
+      for name, helper of options.helpers
        if not weya[name]?
         helpersAdded.push name
-        weya[name] = func.bind weya
+        weya[name] = helper.bind weya
 
 
      pElem = weya._elem
@@ -310,10 +310,10 @@ not appended.
      helpersAdded = []
 
      if options.helpers?
-      for name, func of options.helpers
+      for name, helper of options.helpers
        if not weya[name]?
         helpersAdded.push name
-        weya[name] = func.bind weya
+        weya[name] = helper.bind weya
 
      pBuf = weya._buf
      weya._buf = []
