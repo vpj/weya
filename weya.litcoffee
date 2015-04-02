@@ -295,12 +295,14 @@ not appended.
      pContext = weya.$
      weya.$ = options.context
      added = []
+     setFunc = (name, f) ->
+      weya[name] = ->
+       f.apply weya, arguments
      if options.helpers?
       for name, f of options.helpers
        if not weya[name]?
         added.push name
-        weya[name] = ->
-         f.apply weya, arguments
+        setFunc name, f
      pBuf = weya._buf
      weya._buf = []
      r = func?.call weya
