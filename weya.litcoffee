@@ -294,12 +294,23 @@ not appended.
      weya = weyaMarkup
      pContext = weya.$
      weya.$ = options.context
+     added = []
+     setFunc = (name, f) ->
+      weya[name] = ->
+       f.apply weya, arguments
+     if options.helpers?
+      for name, f of options.helpers
+       if not weya[name]?
+        added.push name
+        setFunc name, f
      pBuf = weya._buf
      weya._buf = []
      r = func?.call weya
      buf = weya._buf
      weya._buf = pBuf
      weya.$ = pContext
+     for name in added
+      weya[name] = null
      return buf.join ''
 
     Weya.setApi = (api) ->
