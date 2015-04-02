@@ -283,34 +283,48 @@ not appended.
      weya = weyaDom
      pContext = weya.$
      weya.$ = options.context
+     helpersAdded = []
+
+     if options.helpers?
+      for name, func of options.helpers
+       if not weya[name]?
+        added.push name
+        weya[name] = func.bind weya
+
+
      pElem = weya._elem
      weya._elem = options.elem
      r = func?.call weya
      weya._elem = pElem
      weya.$ = pContext
+
+     for name in helpersAdded
+      delete weya[name]
+
      return r
 
     Weya.markup = (options, func) ->
      weya = weyaMarkup
      pContext = weya.$
      weya.$ = options.context
-     added = []
-     setFunc = (name, f) ->
-      weya[name] = ->
-       f.apply weya, arguments
+     helpersAdded = []
+
      if options.helpers?
-      for name, f of options.helpers
+      for name, func of options.helpers
        if not weya[name]?
         added.push name
-        setFunc name, f
+        weya[name] = func.bind weya
+
      pBuf = weya._buf
      weya._buf = []
      r = func?.call weya
      buf = weya._buf
      weya._buf = pBuf
      weya.$ = pContext
-     for name in added
-      weya[name] = null
+
+     for name in helpersAdded
+      delete weya[name]
+
      return buf.join ''
 
     Weya.setApi = (api) ->
