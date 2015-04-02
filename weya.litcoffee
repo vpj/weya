@@ -288,7 +288,7 @@ not appended.
      if options.helpers?
       for name, func of options.helpers
        if not weya[name]?
-        added.push name
+        helpersAdded.push name
         weya[name] = func.bind weya
 
 
@@ -312,7 +312,7 @@ not appended.
      if options.helpers?
       for name, func of options.helpers
        if not weya[name]?
-        added.push name
+        helpersAdded.push name
         weya[name] = func.bind weya
 
      pBuf = weya._buf
