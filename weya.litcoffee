@@ -97,11 +97,16 @@ Manipulating dom objects
       for k, v of events
        elem.addEventListener k, v, false
 
+     setData = (elem, data) ->
+      for k, v of data
+       elem[k] = v
+
      setAttributes = (elem, attrs) ->
       for k, v of attrs
        switch k
         when 'style' then setStyles elem, v
         when 'on' then setEvents elem, v
+        when 'data' then setData elem, v
         else
          if v?
           elem.setAttribute k, v
@@ -201,11 +206,16 @@ Render components
       for k, v of events
        buf.push " on#{k}=\"#{v}\""
 
+     setData = (buf, data) ->
+      for k, v of data
+       buf.push " data-#{k}=\"#{v}\""
+
      setAttributes = (buf, attrs) ->
       for k, v of attrs
        switch k
         when 'style' then setStyles buf, v
         when 'on' then setEvents buf, v
+        when 'data' then setData buf, v
         else
          buf.push " #{k}=\"#{v}\""
 
