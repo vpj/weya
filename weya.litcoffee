@@ -238,7 +238,9 @@ Append a child element
        if params.idClass.id?
         buf.push " id=\"#{params.idClass.id}\""
        if params.idClass.class?
-        buf.push " class=\"#{params.idClass.class}\""
+        cssClass = ''
+        cssClass += "#{c} " for c in params.idClass.class
+        buf.push " class=\"#{cssClass}\""
 
       if params.attrs?
        setAttributes buf, params.attrs
