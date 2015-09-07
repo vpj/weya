@@ -43,9 +43,10 @@ The most specific route should be at bottom. Routers can added or overridden
 in subclasses
 
      @routes: (routes) ->
-      @::_routes = _.clone @::_routes
-      for k, v of routes
-       @::_routes[k] = v
+      temp = @::_routes
+      @::_routes = {}
+      @::_routes[k] = v for k, v of temp
+      @::_routes[k] = v for k, v of routes
 
 ####Starts routing
 Option silent will not trigger an event for the current url
@@ -74,7 +75,8 @@ Option silent will not trigger an event for the current url
 ####Registers a route
 
      route: (route, name) ->
-      (route = @_routeToRegExp route) if not _.isRegExp route
+      if (Object.prototype.toString.call route) isnt '[object RegExp]'
+       route = @_routeToRegExp route
 
 Registers the route with Weya.history
 
@@ -150,8 +152,8 @@ Extract parameters from a route regex and URL
 
      _extractParameters: (route, fragment) ->
       params = route.exec(fragment).slice(1)
-      return _.map params, (param) ->
-       if param then decodeURIComponent(param) else null
+      for p, i in params when p?
+       params[i] = decodeURIComponent p
 
 ## History class
 
@@ -176,7 +178,7 @@ Strip urls of hash and query
 
      @initialize ->
       @handlers = []
-      _.bindAll this, 'checkUrl'
+      @checkUrl = @checkUrl.bind this
       @history = window.history
       @location = window.location
       @stateList = []
@@ -245,7 +247,10 @@ Get the URL fragment
      start: (options) ->
       History.started = true
 
-      @options = _.extend {root: '/'}, @options, options
+      opt = {root: '/'}
+      opt[k] = v for k, v of @options
+      opt[k] = v for k, v of options
+      @options = opt
       @root = @options.root
       @_emulateState = @options.emulateState is on
       @_wantsHashChange = @_emulateState is off and @options.hashChange isnt off
@@ -291,12 +296,11 @@ Call callbacks of matching route
 
      loadUrl: (fragment, e) ->
       fragment = @fragment = @getFragment fragment
-      return _.any this.handlers, (handler) ->
+      for handler in @handlers
        if handler.route.test fragment
-        handler.callback fragment, e
-        return true
-       else
-        return false
+        return handler.callback fragment, e
+
+      return
 
 ####Navigate to a URL
 Triggers a route is option trigger is on
