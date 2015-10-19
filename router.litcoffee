@@ -271,9 +271,9 @@ Depending on whether we're using pushState or hashes, and whether
 'onhashchange' is supported, determine how we check the URL state.
 
       if @_hasPushState
-       $(window).on 'popstate', @checkUrl
+       window.onpopstate = @checkUrl
       else if @_wantsHashChange and window.onhashchange?
-       $(window).on 'hashchange', @checkUrl
+       window.onhashchange = @checkUrl
       else if @_wantsHashChange
        @_checkUrlInterval = setInterval @checkUrl, @interval
 
