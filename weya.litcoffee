@@ -225,7 +225,7 @@ Render components
 
 Append a child element
 
-     append = (ns, name, args) ->
+     append = (ns, name, isVoid, args) ->
       params = getParameters args
 
       buf = @_buf
@@ -247,37 +247,43 @@ Append a child element
 
 Can close void elements (element that self close) with a `/>`
 
-      buf.push ">\n"
-      @_indent++
+      if isVoid
+       buf.push "/>\n"
+       if params.func? or params.text?
+        throw new Error 'Void tags cannot have content'
 
-      if params.func?
-       params.func.call this
-      else if params.text?
+      else
+       buf.push ">\n"
+       @_indent++
+
+       if params.func?
+        params.func.call this
+       else if params.text?
+        setIndent buf, @_indent
+        buf.push params.text
+        buf.push "\n"
+
+       @_indent--
        setIndent buf, @_indent
-       buf.push params.text
-       buf.push "\n"
-
-      @_indent--
-      setIndent buf, @_indent
-      buf.push "</#{name}>\n"
+       buf.push "</#{name}>\n"
 
 Wrap `append`
 
-     wrapAppend = (ns, name) ->
+     wrapAppend = (ns, name, isVoid) ->
       ->
-       append.call this, ns, name, arguments
+       append.call this, ns, name, isVoid, arguments
 
 
 Initialize
 
      for name in Tags.svg.split ' '
-      weya[name] = wrapAppend "http://www.w3.org/2000/svg", name
+      weya[name] = wrapAppend "http://www.w3.org/2000/svg", name, false
 
      for name in Tags.html.split ' '
-      weya[name] = wrapAppend null, name
+      weya[name] = wrapAppend null, name, false
 
      for name in Tags.htmlVoid.split ' '
-      weya[name] = wrapAppend null, name
+      weya[name] = wrapAppend null, name, true
 
      return weya
 
