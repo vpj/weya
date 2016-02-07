@@ -295,10 +295,13 @@ Check current url for changes
 Call callbacks of matching route
 
      loadUrl: (fragment, e) ->
-      fragment = @fragment = @getFragment fragment
-      for handler in @handlers
-       if handler.route.test fragment
-        return handler.callback fragment, e
+      try
+       fragment = @fragment = @getFragment fragment
+       for handler in @handlers
+        if handler.route.test fragment
+         return handler.callback fragment, e
+      catch e
+       @onerror? e
 
       return
 
