@@ -118,17 +118,21 @@ Manipulating dom objects
        elem.id = idClass.id
 
       if idClass.class?
-       if elem.classList?
-        for c in idClass.class
-         elem.classList.add c
-       else #For older browsers; does not work with svgs
-        className = ''
-        for c in idClass.class
-         className += ' ' if className isnt ''
-         className += "#{c}"
-        elem.className = className
+       for c in idClass.class
+        elem.classList.add c
 
+     setIdClassFallback = (elem, idClass) ->
+      if idClass.id?
+       elem.id = idClass.id
 
+      if idClass.class?
+       className = idClass.class.join ' '
+       elem.setAttribute 'class', className
+
+     if Api.document?
+      elem = Api.document.createElementNS "http://www.w3.org/2000/svg", 'g'
+      if not elem.classList
+       setIdClass = setIdClassFallback
 
 Append a child element
 
@@ -238,9 +242,8 @@ Append a child element
        if params.idClass.id?
         buf.push " id=\"#{params.idClass.id}\""
        if params.idClass.class?
-        cssClass = ''
-        cssClass += "#{c} " for c in params.idClass.class
-        buf.push " class=\"#{cssClass}\""
+        className = params.idClass.class.join ' '
+        buf.push " class=\"#{className}\""
 
       if params.attrs?
        setAttributes buf, params.attrs
@@ -348,6 +351,8 @@ not appended.
     Weya.setApi = (api) ->
      for k, v of api
       Api[k] = v
+     weyaDom = weyaDomCreate()
+     weyaMarkup = weyaMarkupCreate()
 
     if module?
      module.exports = Weya

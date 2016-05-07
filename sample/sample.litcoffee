@@ -27,4 +27,4 @@ Create a sample div
      @br()
      @br()
      @svg width: 50, height: 50, ->
-      @rect ".red", width: 50, height: 50
+      @rect "#my.red", width: 50, height: 50
