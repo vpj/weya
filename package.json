@@ -1,0 +1,25 @@
+{
+  "name": "weya",
+  "version": "0.1.0",
+  "description": "Modular Coffeescript framework for DOM manip, Routing, etc",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vpj/weya.git"
+  },
+  "keywords": [
+    "dom",
+    "framework"
+  ],
+  "author": "Varuna Jayasiri",
+  "license": "MIT",
+  "dependencies": {
+  },
+  "bugs": {
+    "url": "https://github.com/vpj/weya/issues"
+  },
+  "homepage": "https://github.com/vpj/weya"
+}
