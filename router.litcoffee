@@ -3,10 +3,6 @@
     @Weya = {} unless @Weya?
     Weya = @Weya
 
-    if exports?
-     Weya = require './weya'
-     Weya.Base = require './weya_base'
-
     if not Weya.Base?
      throw new Error 'Weya.Base not found'
 
@@ -371,7 +367,4 @@ Update the hash
 
     Weya.Router = Router
     Weya.history = new History
-
-    if module?
-     module.exports = Weya.Router
 
