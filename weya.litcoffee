@@ -84,7 +84,9 @@ Weya object to be passed as `this`
      weya =
       _elem: null
 
-Manipulating dom objects
+##Manipulating dom objects
+
+Set styles
 
      setStyles = (elem, styles) ->
       for k, v of styles
@@ -93,13 +95,19 @@ Manipulating dom objects
        else
         elem.style.removeProperty k
 
+Set events
+
      setEvents = (elem, events) ->
       for k, v of events
        elem.addEventListener k, v, false
 
+Set data
+
      setData = (elem, data) ->
       for k, v of data
        elem[k] = v
+
+Set attributes
 
      setAttributes = (elem, attrs) ->
       for k, v of attrs
@@ -113,6 +121,8 @@ Manipulating dom objects
          else
           elem.removeAttribute k
 
+Set ID and Class with `classList`
+
      setIdClass = (elem, idClass) ->
       if idClass.id?
        elem.id = idClass.id
@@ -120,6 +130,8 @@ Manipulating dom objects
       if idClass.class?
        for c in idClass.class
         elem.classList.add c
+
+Set ID and Class with setAttributes
 
      setIdClassFallback = (elem, idClass) ->
       if idClass.id?
@@ -129,10 +141,16 @@ Manipulating dom objects
        className = idClass.class.join ' '
        elem.setAttribute 'class', className
 
-     if Api.document?
+Check whether classList is available and switch to fallback otherwise
+
+     switchIdClass = ->
       elem = Api.document.createElementNS "http://www.w3.org/2000/svg", 'g'
       if not elem.classList
        setIdClass = setIdClassFallback
+
+Switch to fall back if no classList
+
+     switchIdClass() if Api.document?
 
 Append a child element
 
