@@ -1,14 +1,31 @@
-Weya({ elem: this.content, context: this }, $ => {
-      if (this.status) {
-          $.p(`Please check your email.
-               We have sent you an email with the login link.`)
-      } else if (this.data === "invalid_email") {
-          $.p(`The email you entered is not a valid email address.
-               Please check again.`)
-      } else {
-          $.p(`The email you entered is not in our system.
-               Please check again.`)
-      }
-      
-      return null
-  })
+Weya({ elem: this.elems.parent, context: this }, $ => {
+    $.div(".signin-base", $ => {
+        $.a(".google-sign", {
+            href: "#",
+            on: { click: this.onGoogleClick.bind(this) }
+        }, $ => {
+            $.img(".normal", {
+                src: "/assets/btn_google_signin_light_normal_web.png",
+                alt: "Signin with Google"
+            })
+            $.img(".focused", {
+                src: "/assets/btn_google_signin_light_focus_web.png",
+                alt: "Signin with Google"
+            })
+            $.img(".pressed", {
+                src: "/assets/btn_google_signin_light_pressed_web.png",
+                alt: "Signin with Google"
+            })
+        })
+        $.div(".get-link", $ => {
+            $.p("Or get a signin link")
+            $.label("Email", { for: "email" })
+            this.elems.email = $.input("#email", {
+                type: "text",
+                placeholder: "Email"
+            })
+            $.button(".btn", "Get Signin Link", {
+                on: { click: this.getLinkClicked.bind(this) }
+            })
+        })
+    })
