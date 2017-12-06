@@ -9,8 +9,14 @@ const API = {
   document: document
 };
 
+export type WeyaElementArg = (WeyaElementFunction | Object | string)
+export type WeyaElementFunction = (...args: WeyaElementArg[]) => HTMLElement
+export interface WeyaHelper {
+  [param: string]: WeyaElementFunction;
+}
+
 function parseIdClass(str: string) {
-  let res = {
+  let res: {id: string | null, classes: string[]} = {
     id: null,
     classes: []
   };
@@ -25,8 +31,13 @@ function parseIdClass(str: string) {
   return res;
 };
 
-function getParameters(args) {
-  let params = {
+function getParameters(args: WeyaElementArg[]) {
+  let params: {
+    idClass: stirng | null, 
+    text: string | null, 
+    attrs: Object | null,
+    func: WeyaElementFunction | null
+  } = {
     idClass: null,
     text: null,
     attrs: null,
@@ -36,17 +47,17 @@ function getParameters(args) {
   for (let arg of args) {
     switch (typeof arg) {
       case "function":
-        params.func = arg;
+        params.func = arg as WeyaElementFunction;
         break;
       case "object":
         params.attrs = arg;
         break;
       case "string":
-        let c = arg.charAt(0);
+        let c = (arg as string).charAt(0);
         if (first && (c === "#" || c === ".")) {
-          params.idClass = parseIdClass(arg);
+          params.idClass = parseIdClass(arg as string);
         } else {
-          params.text = arg;
+          params.text = arg as string;
         }
     }
     first = false
@@ -54,8 +65,14 @@ function getParameters(args) {
   return params;
 };
 
+interface WeyaInterface {
+  _elem: HTMLElement | null,
+  context: Object | null,
+  [param: string]: WeyaElementFunction | HTMLElement | Object | null
+}
+
 function domAPICreate() {
-  let weya = {
+  let weya: WeyaInterface = {
     _elem: null,
     context: null
   };
@@ -129,7 +146,7 @@ function domAPICreate() {
     }
   };
   switchIdClass();
-  function append(ns, name, args) {
+  function append(this: WeyaInterface, ns, name, args): HTMLElement {
     let params = getParameters(args);
     let pElem = this._elem;
     let elem;
@@ -156,7 +173,7 @@ function domAPICreate() {
     return elem;
   };
   function wrapAppend(ns, name) {
-    return function () {
+    return function (this: WeyaInterface): HTMLElement {
       return append.call(this, ns, name, arguments);
     };
   };
@@ -184,12 +201,12 @@ function domAPICreate() {
 
 let WEYA_DOM = domAPICreate()
 
-interface WeyaOptions {
+export interface WeyaOptions {
   context: any,
   elem: HTMLElement
 }
 
-let Weya = function (options: WeyaOptions, func: (any) => HTMLElement) {
+export let Weya = function (options: WeyaOptions, func: (WeyaHelper) => HTMLElement) {
   let weya = WEYA_DOM
   let pContext = weya.context;
   weya.context = options.context;
@@ -201,4 +218,7 @@ let Weya = function (options: WeyaOptions, func: (any) => HTMLElement) {
   return res
 }
 
-export = Weya
+// Example call
+// Weya({ context: {}, elem: document.body}, ($: WeyaHelper): HTMLElement => {
+//   return $.test()
+// })
