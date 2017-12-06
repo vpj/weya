@@ -9,7 +9,7 @@ const API = {
   document: document
 };
 
-export type WeyaRootFunction = ($: WeyaHelper) => HTMLElement
+export type WeyaTemplateFunction = ($: WeyaHelper) => HTMLElement
 export type WeyaNestedFunction = ($: WeyaHelper) => void
 export type WeyaElementArg = (string | AttributesInterface | WeyaNestedFunction)
 export type WeyaElementFunction = (...args: WeyaElementArg[]) => HTMLElement
@@ -231,7 +231,7 @@ export interface WeyaOptions {
   elem: HTMLElement
 }
 
-export let Weya = function (options: WeyaOptions, func: WeyaRootFunction) {
+export let Weya = function (options: WeyaOptions, func: WeyaTemplateFunction) {
   let weya = WEYA_DOM
   let pContext = weya.context;
   weya.context = options.context;
