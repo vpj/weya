@@ -1,3 +1,5 @@
+import {Weya, WeyaHelper} from './weya'
+
 Weya({ elem: this.elems.parent, context: this }, $ => {
     $.div(".signin-base", $ => {
         $.a(".google-sign", {
@@ -17,7 +19,7 @@ Weya({ elem: this.elems.parent, context: this }, $ => {
                 alt: "Signin with Google"
             })
         })
-        $.div(".get-link", $ => {
+        return $.div(".get-link", $ => {
             $.p("Or get a signin link")
             $.label("Email", { for: "email" })
             this.elems.email = $.input("#email", {
@@ -29,3 +31,4 @@ Weya({ elem: this.elems.parent, context: this }, $ => {
             })
         })
     })
+})

@@ -9,9 +9,8 @@ const API = {
   document: document
 };
 
-export type WeyaTemplateFunction = ($: WeyaHelper) => HTMLElement
-export type WeyaNestedFunction = ($: WeyaHelper) => void
-export type WeyaElementArg = (string | AttributesInterface | WeyaNestedFunction)
+export type WeyaTemplateFunction = ($: WeyaHelper) => HTMLElement | void
+export type WeyaElementArg = (string | AttributesInterface | WeyaTemplateFunction)
 export type WeyaElementFunction = (...args: WeyaElementArg[]) => HTMLElement
 export interface WeyaHelper { //TODO define all possible elements
   [param: string]: WeyaElementFunction;
@@ -60,7 +59,7 @@ function getParameters(args: WeyaElementArg[]) {
     idClass: IdClassInterface | null,
     text: string | null,
     attrs: AttributesInterface | null,
-    func: WeyaNestedFunction | null
+    func: WeyaTemplateFunction | null
   } = {
     idClass: null,
     text: null,
@@ -71,7 +70,7 @@ function getParameters(args: WeyaElementArg[]) {
   for (let arg of args) {
     switch (typeof arg) {
       case "function":
-        params.func = arg as WeyaNestedFunction;
+        params.func = arg as WeyaTemplateFunction;
         break;
       case "object":
         params.attrs = arg as AttributesInterface;
@@ -231,7 +230,8 @@ export interface WeyaOptions {
   elem: HTMLElement
 }
 
-export let Weya = function (options: WeyaOptions, func: WeyaTemplateFunction) {
+export let Weya = function (options: WeyaOptions, func: WeyaTemplateFunction)
+  : HTMLElement | undefined{
   let weya = WEYA_DOM
   let pContext = weya.context;
   weya.context = options.context;
@@ -244,11 +244,11 @@ export let Weya = function (options: WeyaOptions, func: WeyaTemplateFunction) {
 }
 
 // Example call
-// Weya({ context: {}, elem: document.body}, $ => {
-//   return $.div("", ($) => {
-//     $.div("", $ => {
-//       $.span($ => {
-//       })
-//     })
-//   })
-// })
+Weya({ context: {}, elem: document.body}, $ => {
+  return $.div("", ($) => {
+    $.div("", $ => {
+      $.span($ => {
+      })
+    })
+  })
+})
