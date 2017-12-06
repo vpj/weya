@@ -9,14 +9,38 @@ const API = {
   document: document
 };
 
-export type WeyaElementArg = (WeyaElementFunction | Object | string)
+export type WeyaRootFunction = ($: WeyaHelper) => HTMLElement
+export type WeyaNestedFunction = ($: WeyaHelper) => void
+export type WeyaElementArg = (string | AttributesInterface | WeyaNestedFunction)
 export type WeyaElementFunction = (...args: WeyaElementArg[]) => HTMLElement
 export interface WeyaHelper {
   [param: string]: WeyaElementFunction;
 }
 
-function parseIdClass(str: string) {
-  let res: {id: string | null, classes: string[]} = {
+export interface StylesInterface {
+  [prop: string]: string | null
+}
+export interface EventsInterface {
+  [prop: string]: EventListenerOrEventListenerObject
+}
+export interface DataInterface {
+  [prop: string]: any
+}
+export interface AttributesInterface {
+  style: StylesInterface
+  on: EventsInterface
+  data: DataInterface
+  // Other Attributes can be string or null
+  [prop: string]: string | null | StylesInterface | EventsInterface | DataInterface
+}
+
+
+interface IdClassInterface {
+  id: string | null,
+  classes: string[]
+}
+function parseIdClass(str: string): IdClassInterface {
+  let res: IdClassInterface = {
     id: null,
     classes: []
   };
@@ -33,10 +57,10 @@ function parseIdClass(str: string) {
 
 function getParameters(args: WeyaElementArg[]) {
   let params: {
-    idClass: stirng | null, 
-    text: string | null, 
-    attrs: Object | null,
-    func: WeyaElementFunction | null
+    idClass: IdClassInterface | null,
+    text: string | null,
+    attrs: AttributesInterface | null,
+    func: WeyaNestedFunction | null
   } = {
     idClass: null,
     text: null,
@@ -47,10 +71,10 @@ function getParameters(args: WeyaElementArg[]) {
   for (let arg of args) {
     switch (typeof arg) {
       case "function":
-        params.func = arg as WeyaElementFunction;
+        params.func = arg as WeyaNestedFunction;
         break;
       case "object":
-        params.attrs = arg;
+        params.attrs = arg as AttributesInterface;
         break;
       case "string":
         let c = (arg as string).charAt(0);
@@ -76,7 +100,7 @@ function domAPICreate() {
     _elem: null,
     context: null
   };
-  function setStyles(elem: HTMLElement, styles) {
+  function setStyles(elem: HTMLElement, styles: StylesInterface) {
     for (let k in styles) {
       let v = styles[k];
       if (v != null) {
@@ -86,40 +110,40 @@ function domAPICreate() {
       }
     }
   }
-  function setEvents(elem: HTMLElement, events) {
+  function setEvents(elem: HTMLElement, events: EventsInterface) {
     for (let k in events) {
       elem.addEventListener(k, events[k], false)
     }
   }
-  function setData(elem, data) {
+  function setData(elem: any, data: DataInterface) {
     for (let k in data) {
       elem[k] = data[k]
     }
   };
-  function setAttributes(elem: HTMLElement, attrs) {
+  function setAttributes(elem: HTMLElement, attrs: AttributesInterface) {
     for (let k in attrs) {
       let v = attrs[k];
       switch (k) {
         case "style":
-          setStyles(elem, v)
+          setStyles(elem, v as StylesInterface)
           break;
         case "on":
-          setEvents(elem, v)
+          setEvents(elem, v as EventsInterface)
           break;
         case "data":
-          setData(elem, v)
+          setData(elem, v as DataInterface)
           break;
         default:
           if (v != null) {
-            elem.setAttribute(k, v)
+            elem.setAttribute(k, v as string)
           } else {
             elem.removeAttribute(k)
           }
       }
     }
   }
-  let setIdClass;
-  function setIdClassNew(elem: HTMLElement, idClass) {
+  let setIdClass: typeof setIdClassNew;
+  function setIdClassNew(elem: HTMLElement, idClass: IdClassInterface) {
     if (idClass.id != null) {
       elem.id = idClass.id;
     }
@@ -127,7 +151,7 @@ function domAPICreate() {
       elem.classList.add(c)
     }
   }
-  function setIdClassFallback(elem: HTMLElement, idClass) {
+  function setIdClassFallback(elem: HTMLElement, idClass: IdClassInterface) {
     if (idClass.id != null) {
       elem.id = idClass.id;
     }
@@ -146,12 +170,13 @@ function domAPICreate() {
     }
   };
   switchIdClass();
-  function append(this: WeyaInterface, ns, name, args): HTMLElement {
+  type NSInterface = "http://www.w3.org/2000/svg" | "http://www.w3.org/1999/xhtml" | null
+  function append(this: WeyaInterface, ns: NSInterface, name: string, args: WeyaElementArg[]): HTMLElement {
     let params = getParameters(args);
     let pElem = this._elem;
     let elem;
     if (ns != null) {
-      elem = this._elem = API.document.createElementNS(ns, name);
+      elem = this._elem = API.document.createElementNS(ns, name) as HTMLElement; // TODO can be SVGElement too
     } else {
       elem = this._elem = API.document.createElement(name);
     }
@@ -172,7 +197,7 @@ function domAPICreate() {
     this._elem = pElem;
     return elem;
   };
-  function wrapAppend(ns, name) {
+  function wrapAppend(ns: NSInterface, name: string) {
     return function (this: WeyaInterface): HTMLElement {
       return append.call(this, ns, name, arguments);
     };
@@ -206,7 +231,7 @@ export interface WeyaOptions {
   elem: HTMLElement
 }
 
-export let Weya = function (options: WeyaOptions, func: (WeyaHelper) => HTMLElement) {
+export let Weya = function (options: WeyaOptions, func: WeyaRootFunction) {
   let weya = WEYA_DOM
   let pContext = weya.context;
   weya.context = options.context;
@@ -219,6 +244,11 @@ export let Weya = function (options: WeyaOptions, func: (WeyaHelper) => HTMLElem
 }
 
 // Example call
-// Weya({ context: {}, elem: document.body}, ($: WeyaHelper): HTMLElement => {
-//   return $.test()
+// Weya({ context: {}, elem: document.body}, $ => {
+//   return $.div("", ($) => {
+//     $.div("", $ => {
+//       $.span($ => {
+//       })
+//     })
+//   })
 // })
