@@ -13,7 +13,7 @@ export type WeyaTemplateFunction = ($: WeyaHelper) => HTMLElement
 export type WeyaNestedFunction = ($: WeyaHelper) => void
 export type WeyaElementArg = (string | AttributesInterface | WeyaNestedFunction)
 export type WeyaElementFunction = (...args: WeyaElementArg[]) => HTMLElement
-export interface WeyaHelper {
+export interface WeyaHelper { //TODO define all possible elements
   [param: string]: WeyaElementFunction;
 }
 
@@ -27,11 +27,11 @@ export interface DataInterface {
   [prop: string]: any
 }
 export interface AttributesInterface {
-  style: StylesInterface
-  on: EventsInterface
-  data: DataInterface
+  style?: StylesInterface
+  on?: EventsInterface
+  data?: DataInterface
   // Other Attributes can be string or null
-  [prop: string]: string | null | StylesInterface | EventsInterface | DataInterface
+  [prop: string]: string | null | StylesInterface | EventsInterface | DataInterface | undefined
 }
 
 
