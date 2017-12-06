@@ -244,11 +244,11 @@ export let Weya = function (options: WeyaOptions, func: WeyaTemplateFunction)
 }
 
 // Example call
-Weya({ context: {}, elem: document.body}, $ => {
-  return $.div("", ($) => {
-    $.div("", $ => {
-      $.span($ => {
-      })
-    })
-  })
-})
+// Weya({ context: {}, elem: document.body}, $ => {
+//   return $.div("", ($) => {
+//     $.div("", $ => {
+//       $.span($ => {
+//       })
+//     })
+//   })
+// })

@@ -4,7 +4,10 @@
   "description": "Modular Coffeescript framework for DOM manip, Routing, etc",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rm -rf ./dist",
+    "build": "tsc",
+    "build-dom-sample": "npm run build && browserify ./dist/sample/dom.js > sample/sample.js"
   },
   "repository": {
     "type": "git",
