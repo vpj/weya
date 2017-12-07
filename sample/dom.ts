@@ -1,4 +1,4 @@
-import { Weya, WeyaHelper } from './../weya'
+import { Weya, WeyaHelper } from './../main'
 
 var student;
 class Student {
