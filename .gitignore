@@ -38,3 +38,9 @@ Icon?
 Thumbs.db
 node_modules
 build
+
+# Samples
+sample/sample.js
+
+dist
+package-lock.json

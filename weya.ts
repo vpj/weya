@@ -9,8 +9,37 @@ const API = {
   document: document
 };
 
-function parseIdClass(str: string) {
-  let res = {
+export type WeyaTemplateFunction = ($: WeyaHelper) => HTMLElement | void
+export type WeyaElementArg = (string | AttributesInterface | WeyaTemplateFunction)
+export type WeyaElementFunction = (...args: WeyaElementArg[]) => HTMLElement
+export interface WeyaHelper { //TODO define all possible elements
+  [param: string]: WeyaElementFunction;
+}
+
+export interface StylesInterface {
+  [prop: string]: string | null
+}
+export interface EventsInterface {
+  [prop: string]: EventListenerOrEventListenerObject
+}
+export interface DataInterface {
+  [prop: string]: any
+}
+export interface AttributesInterface {
+  style?: StylesInterface
+  on?: EventsInterface
+  data?: DataInterface
+  // Other Attributes can be string or null
+  [prop: string]: string | null | StylesInterface | EventsInterface | DataInterface | undefined
+}
+
+
+interface IdClassInterface {
+  id: string | null,
+  classes: string[]
+}
+function parseIdClass(str: string): IdClassInterface {
+  let res: IdClassInterface = {
     id: null,
     classes: []
   };
@@ -25,8 +54,13 @@ function parseIdClass(str: string) {
   return res;
 };
 
-function getParameters(args) {
-  let params = {
+function getParameters(args: WeyaElementArg[]) {
+  let params: {
+    idClass: IdClassInterface | null,
+    text: string | null,
+    attrs: AttributesInterface | null,
+    func: WeyaTemplateFunction | null
+  } = {
     idClass: null,
     text: null,
     attrs: null,
@@ -36,17 +70,17 @@ function getParameters(args) {
   for (let arg of args) {
     switch (typeof arg) {
       case "function":
-        params.func = arg;
+        params.func = arg as WeyaTemplateFunction;
         break;
       case "object":
-        params.attrs = arg;
+        params.attrs = arg as AttributesInterface;
         break;
       case "string":
-        let c = arg.charAt(0);
+        let c = (arg as string).charAt(0);
         if (first && (c === "#" || c === ".")) {
-          params.idClass = parseIdClass(arg);
+          params.idClass = parseIdClass(arg as string);
         } else {
-          params.text = arg;
+          params.text = arg as string;
         }
     }
     first = false
@@ -54,12 +88,18 @@ function getParameters(args) {
   return params;
 };
 
+interface WeyaInterface {
+  _elem: HTMLElement | null,
+  context: Object | null,
+  [param: string]: WeyaElementFunction | HTMLElement | Object | null
+}
+
 function domAPICreate() {
-  let weya = {
+  let weya: WeyaInterface = {
     _elem: null,
     context: null
   };
-  function setStyles(elem: HTMLElement, styles) {
+  function setStyles(elem: HTMLElement, styles: StylesInterface) {
     for (let k in styles) {
       let v = styles[k];
       if (v != null) {
@@ -69,40 +109,40 @@ function domAPICreate() {
       }
     }
   }
-  function setEvents(elem: HTMLElement, events) {
+  function setEvents(elem: HTMLElement, events: EventsInterface) {
     for (let k in events) {
       elem.addEventListener(k, events[k], false)
     }
   }
-  function setData(elem, data) {
+  function setData(elem: any, data: DataInterface) {
     for (let k in data) {
       elem[k] = data[k]
     }
   };
-  function setAttributes(elem: HTMLElement, attrs) {
+  function setAttributes(elem: HTMLElement, attrs: AttributesInterface) {
     for (let k in attrs) {
       let v = attrs[k];
       switch (k) {
         case "style":
-          setStyles(elem, v)
+          setStyles(elem, v as StylesInterface)
           break;
         case "on":
-          setEvents(elem, v)
+          setEvents(elem, v as EventsInterface)
           break;
         case "data":
-          setData(elem, v)
+          setData(elem, v as DataInterface)
           break;
         default:
           if (v != null) {
-            elem.setAttribute(k, v)
+            elem.setAttribute(k, v as string)
           } else {
             elem.removeAttribute(k)
           }
       }
     }
   }
-  let setIdClass;
-  function setIdClassNew(elem: HTMLElement, idClass) {
+  let setIdClass: typeof setIdClassNew;
+  function setIdClassNew(elem: HTMLElement, idClass: IdClassInterface) {
     if (idClass.id != null) {
       elem.id = idClass.id;
     }
@@ -110,7 +150,7 @@ function domAPICreate() {
       elem.classList.add(c)
     }
   }
-  function setIdClassFallback(elem: HTMLElement, idClass) {
+  function setIdClassFallback(elem: HTMLElement, idClass: IdClassInterface) {
     if (idClass.id != null) {
       elem.id = idClass.id;
     }
@@ -129,12 +169,13 @@ function domAPICreate() {
     }
   };
   switchIdClass();
-  function append(ns, name, args) {
+  type NSInterface = "http://www.w3.org/2000/svg" | "http://www.w3.org/1999/xhtml" | null
+  function append(this: WeyaInterface, ns: NSInterface, name: string, args: WeyaElementArg[]): HTMLElement {
     let params = getParameters(args);
     let pElem = this._elem;
     let elem;
     if (ns != null) {
-      elem = this._elem = API.document.createElementNS(ns, name);
+      elem = this._elem = API.document.createElementNS(ns, name) as HTMLElement; // TODO can be SVGElement too
     } else {
       elem = this._elem = API.document.createElement(name);
     }
@@ -155,8 +196,8 @@ function domAPICreate() {
     this._elem = pElem;
     return elem;
   };
-  function wrapAppend(ns, name) {
-    return function () {
+  function wrapAppend(ns: NSInterface, name: string) {
+    return function (this: WeyaInterface): HTMLElement {
       return append.call(this, ns, name, arguments);
     };
   };
@@ -184,12 +225,13 @@ function domAPICreate() {
 
 let WEYA_DOM = domAPICreate()
 
-interface WeyaOptions {
+export interface WeyaOptions {
   context: any,
   elem: HTMLElement
 }
 
-let Weya = function (options: WeyaOptions, func: (any) => HTMLElement) {
+export let Weya = function (options: WeyaOptions, func: WeyaTemplateFunction)
+  : HTMLElement | undefined{
   let weya = WEYA_DOM
   let pContext = weya.context;
   weya.context = options.context;
@@ -201,4 +243,12 @@ let Weya = function (options: WeyaOptions, func: (any) => HTMLElement) {
   return res
 }
 
-export = Weya
+// Example call
+// Weya({ context: {}, elem: document.body}, $ => {
+//   return $.div("", ($) => {
+//     $.div("", $ => {
+//       $.span($ => {
+//       })
+//     })
+//   })
+// })
