@@ -1,3 +1,2 @@
 export * from './weya';
-// TODO
-// export * from './router'
+export * from './router'
