@@ -1,4 +1,4 @@
-class Router {
+export class Router {
   private optionalParam = /\((.*?)\)/g;
   private namedParam = /(\(\?)?:\w+/g;
   private splatParam = /\*\w+/g;
@@ -365,5 +365,3 @@ class Controller {
     }
   }
 }
-
-export = Router

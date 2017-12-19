@@ -1,4 +1,4 @@
-import {Weya, WeyaHelper} from './weya'
+import {Weya} from './main'
 
 Weya({ elem: this.elems.parent, context: this }, $ => {
     $.div(".signin-base", $ => {
