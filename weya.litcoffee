@@ -75,7 +75,7 @@ Parse id and class string
 
      return params
 
-#Weya DOM
+# Weya DOM
 
     weyaDomCreate = ->
 
@@ -84,7 +84,7 @@ Weya object to be passed as `this`
      weya =
       _elem: null
 
-##Manipulating dom objects
+## Manipulating dom objects
 
 Set styles
 
@@ -206,7 +206,7 @@ Initialize
      return weya
 
 
-#Weya Markup
+# Weya Markup
 
     weyaMarkupCreate = ->
 
@@ -309,7 +309,7 @@ Initialize
      return weya
 
 
-#Weya API
+# Weya API
 
     weyaDom = weyaDomCreate()
     weyaMarkup = weyaMarkupCreate()
