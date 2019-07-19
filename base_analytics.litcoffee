@@ -1,4 +1,4 @@
-#Weya.Base.js
+# Weya.Base.js
 
     @Weya = {} unless @Weya?
     Weya = @Weya
@@ -19,7 +19,7 @@
 
 
 
-##Weya.Base
+## Weya.Base
 Introduces class level function initialize and include.
 
     class Base
@@ -70,7 +70,7 @@ Setter
      constructor: ->
       @_init.apply this, arguments
 
-####Register initialize functions.
+#### Register initialize functions.
 All initializer funcitons in subclasses will be called with the constructor
 arguments.
 
@@ -92,7 +92,7 @@ arguments.
 
       return
 
-####Include objects.
+#### Include objects.
 You can include objects by registering them with @include. This tries to
 solve the problem of single inheritence.
 
