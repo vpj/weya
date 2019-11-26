@@ -1,4 +1,4 @@
-# Weya
+# 🐜 Weya
 
 Weya is a lightweight library we use to replace [Coffeecup](https://github.com/gradus/coffeecup) and DOM manipulation of [d3.js](http://d3js.org/). Weya is very close to [Vanilla javascript](http://vanilla-js.com/), but with more readable code. Usage of Weya is similar to coffeecup, [but as fast as d3.js](http://jsperf.com/weya-jquery-d3-coffeecup).
 
