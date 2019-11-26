@@ -23,7 +23,7 @@ $('div.users', document.body, $ => {
         });
         (<any>userDiv).userId = i
         userElems.push({ user: users[i], div: userDiv })
-}
+    }
 })
 
 function editUser() {
