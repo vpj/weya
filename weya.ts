@@ -24,9 +24,9 @@ const NAMESPACES = {
 
 export type WeyaElement = HTMLElement | SVGElement;
 
-type WeyaTemplateFunction = ($: WeyaElementFunction) => void
+export type WeyaTemplateFunction = ($: WeyaElementFunction) => void
 type WeyaElementArg = (string | AttributesInterface | WeyaTemplateFunction | WeyaElement)
-type WeyaElementFunction = (this: WeyaContext | void, ...args: WeyaElementArg[]) => WeyaElement
+export type WeyaElementFunction = (this: WeyaContext | void, ...args: WeyaElementArg[]) => WeyaElement
 
 interface WeyaContext {
     _elem?: WeyaElement,
@@ -43,13 +43,19 @@ interface Parameters {
 interface StylesInterface {
     [prop: string]: string | null
 }
+
 interface EventsInterface {
     [prop: string]: EventListenerOrEventListenerObject
+}
+
+interface DataInterface {
+    [prop: string]: any
 }
 
 interface AttributesInterface {
     style?: StylesInterface
     on?: EventsInterface
+    data?: DataInterface
     // Other Attributes can be string or null
     [prop: string]: string | null | StylesInterface | EventsInterface
 }
@@ -92,11 +98,14 @@ function getParameters(args: WeyaElementArg[]) {
         func: null,
         parent: null
     };
-    let defStr = args.length > 0 ? <string>args[0] : 'div';
+    if (args.length == 0) {
+        params.def = parseDefinition('div')
+    } else if (typeof (args[0]) == 'string') {
+        params.def = parseDefinition(args[0])
+        args = args.slice(1)
+    }
 
-    params.def = parseDefinition(defStr);
-
-    for (let arg of args.slice(1)) {
+    for (let arg of args) {
         switch (typeof arg) {
             case "function":
                 params.func = arg as WeyaTemplateFunction;
@@ -135,6 +144,12 @@ function domAPICreate(): WeyaElementFunction {
         }
     }
 
+    function setData(elem: WeyaElement, data: DataInterface) {
+        for (let k in data) {
+            elem[k] = data[k]
+        }
+    }
+
     function setAttributes(elem: WeyaElement, attrs: AttributesInterface) {
         for (let k in attrs) {
             let v = attrs[k];
@@ -145,6 +160,8 @@ function domAPICreate(): WeyaElementFunction {
                 case "on":
                     setEvents(elem, v as EventsInterface)
                     break;
+                case "data":
+                    setData(elem, v as DataInterface)
                 default:
                     if (v != null) {
                         elem.setAttribute(k, v as string)
@@ -195,23 +212,29 @@ function domAPICreate(): WeyaElementFunction {
         }
 
         let elem: WeyaElement;
-        let tag = params.def.tag;
-        let ns = NAMESPACES[TAGS_DICT[tag]];
 
-        if (ns != null) {
-            elem = API.document.createElementNS(ns, tag) as WeyaElement;
+        if (params.def == null) {
+            elem = parent
         } else {
-            elem = API.document.createElement(tag);
-        }
 
-        if (params.def != null) {
-            setIdClass(elem, params.def);
-        }
-        if (params.attrs != null) {
-            setAttributes(elem, params.attrs);
-        }
-        if (parent != null) {
-            parent.appendChild(elem);
+            let tag = params.def.tag;
+            let ns = NAMESPACES[TAGS_DICT[tag]];
+
+            if (ns != null) {
+                elem = API.document.createElementNS(ns, tag) as WeyaElement;
+            } else {
+                elem = API.document.createElement(tag);
+            }
+
+            if (params.def != null) {
+                setIdClass(elem, params.def);
+            }
+            if (params.attrs != null) {
+                setAttributes(elem, params.attrs);
+            }
+            if (parent != null) {
+                parent.appendChild(elem);
+            }
         }
 
         if (params.func != null) {
