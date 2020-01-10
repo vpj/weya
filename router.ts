@@ -1,4 +1,3 @@
-/* From https://github.com/vpj/weya/blob/master/router.ts */
 export class Router {
     private optionalParam = /\((.*?)\)/g
     private namedParam = /(\(\?)?:\w+/g
@@ -195,13 +194,6 @@ class Controller {
         this.root = options.root || '/'
         this.root = ("/" + this.root + "/").replace(this.rootStripper, '/')
 
-        if (this.hasPushState) {
-            window.onpopstate = this.checkUrl
-        } else if (this.wantsHashChange && (window.onhashchange != null)) {
-            window.onhashchange = this.checkUrl
-        } else if (this.wantsHashChange) {
-            this.checkUrlInterval = setInterval(this.checkUrl, this.interval)
-        }
         if (options.onerror) {
             this.onerror = options.onerror
         }
@@ -212,6 +204,14 @@ class Controller {
         if (this.emulateState && (startState != null)) {
             this.pushEmulateState(startState.state, startState.title, startState.fragment)
         }
+        if (this.hasPushState) {
+            window.onpopstate = this.checkUrl
+        } else if (this.wantsHashChange && (window.onhashchange != null)) {
+            window.onhashchange = this.checkUrl
+        } else if (this.wantsHashChange) {
+            this.checkUrlInterval = setInterval(this.checkUrl, this.interval)
+        }
+
         this.fragment = this.getFragment()
         if (!silent) {
             return this.loadUrl(null, null)
