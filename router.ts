@@ -77,7 +77,16 @@ export class Router {
     }
 
     navigate(fragment: string, options?: NavigateOptions) {
-        if (!options) options = { replace: false, trigger: true, title: '', state: null }
+        const def = { replace: false, trigger: true, title: '', state: null }
+        if (!options) {
+            options = def
+        }
+        for(let k in def) {
+            if(!(k in options)) {
+                options[k] = def[k]
+            }
+        }
+
         if (options.replace) {
             this.history.pop()
         }
@@ -140,10 +149,10 @@ interface ErrorCallback {
 }
 
 interface NavigateOptions {
-    replace: boolean,
-    trigger: boolean,
-    title: string,
-    state: any
+    replace?: boolean
+    trigger?: boolean
+    title?: string
+    state?: any
 }
 
 interface RouterOptions {
