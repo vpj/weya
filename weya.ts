@@ -101,7 +101,7 @@ function getParameters(args: WeyaElementArg[]) {
     if (args.length == 0) {
         params.def = parseDefinition('div')
     } else if (typeof (args[0]) == 'string') {
-        params.def = parseDefinition(args[0])
+        params.def = parseDefinition(<string>args[0])
         args = args.slice(1)
     }
 
