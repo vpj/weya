@@ -1,3 +1,5 @@
+import Timeout = NodeJS.Timeout;
+
 export class Router {
     private optionalParam = /\((.*?)\)/g
     private namedParam = /(\(\?)?:\w+/g
@@ -182,7 +184,7 @@ class Controller {
     private hasPushState: boolean
     private wantsHashChange: boolean
     private root: string
-    private checkUrlInterval: number
+    private checkUrlInterval: Timeout
     private fragment: string
     private started: boolean
     private onerror: ErrorCallback
