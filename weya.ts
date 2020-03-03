@@ -1,18 +1,17 @@
-
 const API = {
     document: document
-};
+}
 const TAGS = {
     svg: "a altGlyph altGlyphDef altGlyphItem animate animateColor animateMotion animateTransform circle clipPath color-profile cursor defs desc ellipse feBlend feColorMatrix feComponentTransfer feComposite feConvolveMatrix feDiffuseLighting feDisplacementMap feDistantLight feFlood feFuncA feFuncB feFuncG feFuncR feGaussianBlur feImage feMerge feMergeNode feMorphology feOffset fePointLight feSpecularLighting feSpotLight feTile feTurbulence filter font font-face font-face-format font-face-name font-face-src font-face-uri foreignObject g glyph glyphRef hkern image line linearGradient marker mask metadata missing-glyph mpath path pattern polygon polyline radialGradient rect script set stop style svg symbol text textPath title tref tspan use view vkern switch foreignObject",
     html: "a abbr address article aside audio b bdi bdo blockquote body button canvas caption cite code colgroup datalist dd del details dfn div dl dt em fieldset figcaption figure footer form h1 h2 h3 h4 h5 h6 head header hgroup html i iframe ins kbd label legend li main map mark menu meter nav noscript object ol optgroup option output p pre progress q rp rt ruby s samp script section select small span strong style sub summary sup table tbody td textarea tfoot th thead time title tr u ul video",
     htmlVoid: "area base br col command embed hr img input keygen link meta param source track wbr"
-};
+}
 
-let TAGS_DICT = {};
+let TAGS_DICT = {}
 for (let ns in TAGS) {
-    let tags = TAGS[ns].split(" ");
+    let tags = TAGS[ns].split(" ")
     for (let tag of tags) {
-        TAGS_DICT[tag] = ns;
+        TAGS_DICT[tag] = ns
     }
 }
 
@@ -22,11 +21,61 @@ const NAMESPACES = {
     htmlVoid: null
 }
 
-export type WeyaElement = HTMLElement | SVGElement;
+export type WeyaElement = HTMLElement | SVGElement
 
-export type WeyaTemplateFunction = ($: WeyaElementFunction) => void
+export interface WeyaTemplateFunction {
+    ($: WeyaElementFunction): void
+}
+
 type WeyaElementArg = (string | AttributesInterface | WeyaTemplateFunction | WeyaElement)
-export type WeyaElementFunction = (this: WeyaContext | void, ...args: WeyaElementArg[]) => WeyaElement
+
+export interface WeyaElementFunction {
+    // Default tag = div
+    (this: WeyaContext | void): WeyaElement
+
+    (this: WeyaContext | void, parent: WeyaElement): WeyaElement
+
+    (this: WeyaContext | void, attrs: AttributesInterface): WeyaElement
+
+    (this: WeyaContext | void, text: string): WeyaElement
+
+    (this: WeyaContext | void, text: string, attrs: AttributesInterface): WeyaElement
+
+    (this: WeyaContext | void, func: WeyaTemplateFunction): WeyaElement
+
+    (this: WeyaContext | void, parent: WeyaElement, attrs: AttributesInterface): WeyaElement
+
+    (this: WeyaContext | void, parent: WeyaElement, text: string): WeyaElement
+
+    (this: WeyaContext | void, parent: WeyaElement, text: string, attrs: AttributesInterface): WeyaElement
+
+    (this: WeyaContext | void, parent: WeyaElement, func: WeyaTemplateFunction): WeyaElement
+
+    // With tag
+    (this: WeyaContext | void, tag: string): WeyaElement
+
+    (this: WeyaContext | void, tag: string, parent: WeyaElement): WeyaElement
+
+    (this: WeyaContext | void, tag: string, attrs: AttributesInterface): WeyaElement
+
+    (this: WeyaContext | void, tag: string, text: string): WeyaElement
+
+    (this: WeyaContext | void, tag: string, text: string, attrs: AttributesInterface): WeyaElement
+
+    (this: WeyaContext | void, tag: string, func: WeyaTemplateFunction): WeyaElement
+
+    (this: WeyaContext | void, tag: string, attrs: AttributesInterface, func: WeyaTemplateFunction): WeyaElement
+
+    (this: WeyaContext | void, tag: string, parent: WeyaElement, attrs: AttributesInterface): WeyaElement
+
+    (this: WeyaContext | void, tag: string, parent: WeyaElement, text: string): WeyaElement
+
+    (this: WeyaContext | void, tag: string, parent: WeyaElement, text: string, attrs: AttributesInterface): WeyaElement
+
+    (this: WeyaContext | void, tag: string, parent: WeyaElement, func: WeyaTemplateFunction): WeyaElement
+
+    (this: WeyaContext | void, tag: string, parent: WeyaElement, attrs: AttributesInterface, func: WeyaTemplateFunction): WeyaElement
+}
 
 interface WeyaContext {
     _elem?: WeyaElement,
@@ -56,6 +105,7 @@ interface AttributesInterface {
     style?: StylesInterface
     on?: EventsInterface
     data?: DataInterface
+
     // Other Attributes can be string or null
     [prop: string]: string | null | StylesInterface | EventsInterface
 }
@@ -71,24 +121,24 @@ function parseDefinition(str: string): ElemDef {
         tag: '',
         id: null,
         classes: []
-    };
+    }
 
-    let parts = str.split(".");
-    let first = parts[0];
-    let firstParts = first.split('#');
-    res.tag = firstParts[0];
+    let parts = str.split(".")
+    let first = parts[0]
+    let firstParts = first.split('#')
+    res.tag = firstParts[0]
     if (firstParts.length == 2) {
-        res.id = firstParts[1];
+        res.id = firstParts[1]
     } else if (firstParts.length > 2) {
         throw Error("Invalid Definition: " + str)
     }
 
     if (parts.length > 1) {
-        res.classes = parts.slice(1);
+        res.classes = parts.slice(1)
     }
 
-    return res;
-};
+    return res
+}
 
 function getParameters(args: WeyaElementArg[]) {
     let params: Parameters = {
@@ -97,7 +147,7 @@ function getParameters(args: WeyaElementArg[]) {
         attrs: null,
         func: null,
         parent: null
-    };
+    }
     if (args.length == 0) {
         params.def = parseDefinition('div')
     } else if (typeof (args[0]) == 'string') {
@@ -108,26 +158,26 @@ function getParameters(args: WeyaElementArg[]) {
     for (let arg of args) {
         switch (typeof arg) {
             case "function":
-                params.func = arg as WeyaTemplateFunction;
-                break;
+                params.func = arg as WeyaTemplateFunction
+                break
             case "object":
                 if (arg instanceof HTMLElement || arg instanceof SVGElement) {
-                    params.parent = arg as WeyaElement;
+                    params.parent = arg as WeyaElement
                 } else {
-                    params.attrs = arg as AttributesInterface;
+                    params.attrs = arg as AttributesInterface
                 }
-                break;
+                break
             case "string":
-                params.text = arg as string;
+                params.text = arg as string
         }
     }
-    return params;
-};
+    return params
+}
 
 function domAPICreate(): WeyaElementFunction {
     function setStyles(elem: WeyaElement, styles: StylesInterface) {
         for (let k in styles) {
-            let v = styles[k];
+            let v = styles[k]
             if (v != null) {
                 elem.style.setProperty(k, v)
             } else {
@@ -135,6 +185,7 @@ function domAPICreate(): WeyaElementFunction {
             }
         }
     }
+
     function setEvents(elem: WeyaElement, events: EventsInterface) {
         for (let k in events) {
             let names = k.split('|')
@@ -152,16 +203,17 @@ function domAPICreate(): WeyaElementFunction {
 
     function setAttributes(elem: WeyaElement, attrs: AttributesInterface) {
         for (let k in attrs) {
-            let v = attrs[k];
+            let v = attrs[k]
             switch (k) {
                 case "style":
                     setStyles(elem, v as StylesInterface)
-                    break;
+                    break
                 case "on":
                     setEvents(elem, v as EventsInterface)
-                    break;
+                    break
                 case "data":
                     setData(elem, v as DataInterface)
+                    break
                 default:
                     if (v != null) {
                         elem.setAttribute(k, v as string)
@@ -171,69 +223,73 @@ function domAPICreate(): WeyaElementFunction {
             }
         }
     }
-    let setIdClass: typeof setIdClassNew;
+
+    let setIdClass: typeof setIdClassNew
+
     function setIdClassNew(elem: WeyaElement, idClass: ElemDef) {
         if (idClass.id != null) {
-            elem.id = idClass.id;
+            elem.id = idClass.id
         }
         for (let c of idClass.classes) {
             elem.classList.add(c)
         }
     }
+
     function setIdClassFallback(elem: WeyaElement, idClass: ElemDef) {
         if (idClass.id != null) {
-            elem.id = idClass.id;
+            elem.id = idClass.id
         }
         if (idClass.classes.length > 0) {
             let className = idClass.classes.join(" ")
-            elem.setAttribute("class", className);
+            elem.setAttribute("class", className)
         }
-    };
+    }
 
     function switchIdClass() {
-        let elem = API.document.createElementNS("http://www.w3.org/2000/svg", "g");
+        let elem = API.document.createElementNS("http://www.w3.org/2000/svg", "g")
         if (!elem.classList) {
-            setIdClass = setIdClassFallback;
+            setIdClass = setIdClassFallback
         } else {
             setIdClass = setIdClassNew
         }
-    };
-    switchIdClass();
+    }
+
+    switchIdClass()
 
     function append(this: WeyaContext, ...args: WeyaElementArg[]): WeyaElement {
-        let params = getParameters(args);
+        let params = getParameters(args)
 
-        let parent = params.parent;
+        let parent = params.parent
         if (this != null && this._elem != null) {
             if (parent != null) {
-                throw Error("Cannot set a parent within a context");
+                throw Error("Cannot set a parent within a context")
             }
-            parent = this._elem;
+            parent = this._elem
         }
 
-        let elem: WeyaElement;
+        let elem: WeyaElement
 
         if (params.def == null) {
             elem = parent
         } else {
 
-            let tag = params.def.tag;
-            let ns = NAMESPACES[TAGS_DICT[tag]];
+            let tag = params.def.tag
+            let ns = NAMESPACES[TAGS_DICT[tag]]
 
             if (ns != null) {
-                elem = API.document.createElementNS(ns, tag) as WeyaElement;
+                elem = API.document.createElementNS(ns, tag) as WeyaElement
             } else {
-                elem = API.document.createElement(tag);
+                elem = API.document.createElement(tag)
             }
 
             if (params.def != null) {
-                setIdClass(elem, params.def);
+                setIdClass(elem, params.def)
             }
             if (params.attrs != null) {
-                setAttributes(elem, params.attrs);
+                setAttributes(elem, params.attrs)
             }
             if (parent != null) {
-                parent.appendChild(elem);
+                parent.appendChild(elem)
             }
         }
 
@@ -241,14 +297,14 @@ function domAPICreate(): WeyaElementFunction {
             let state: WeyaContext = {
                 _elem: elem
             }
-            params.func(append.bind(state));
+            params.func(append.bind(state))
         } else if (params.text != null) {
-            elem.textContent = params.text;
+            elem.textContent = params.text
         }
-        return elem;
-    };
+        return elem
+    }
 
-    return append;
+    return append
 }
 
 export let Weya = domAPICreate()
