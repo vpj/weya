@@ -107,7 +107,7 @@ interface AttributesInterface {
     data?: DataInterface
 
     // Other Attributes can be string or null
-    [prop: string]: string | null | StylesInterface | EventsInterface
+    [prop: string]: string | number | null | StylesInterface | EventsInterface
 }
 
 interface ElemDef {
