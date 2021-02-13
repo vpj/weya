@@ -101,6 +101,57 @@ export interface WeyaElementFunction {
 
     <K extends keyof HTMLElementTagNameMap>(this: WeyaContext | void, tag: K, selector: string, parent: WeyaElement, attrs: AttributesInterface, func: WeyaTemplateFunction): HTMLElementTagNameMap[K]
 
+    //Repeat for SVG
+        // With tag
+    <K extends keyof SVGElementTagNameMap>(this: WeyaContext | void, tag: K): SVGElementTagNameMap[K]
+
+    <K extends keyof SVGElementTagNameMap>(this: WeyaContext | void, tag: K, parent: WeyaElement): SVGElementTagNameMap[K]
+
+    <K extends keyof SVGElementTagNameMap>(this: WeyaContext | void, tag: K, attrs: AttributesInterface): SVGElementTagNameMap[K]
+
+    <K extends keyof SVGElementTagNameMap>(this: WeyaContext | void, tag: K, text: string): SVGElementTagNameMap[K]
+
+    <K extends keyof SVGElementTagNameMap>(this: WeyaContext | void, tag: K, text: string, attrs: AttributesInterface): SVGElementTagNameMap[K]
+
+    <K extends keyof SVGElementTagNameMap>(this: WeyaContext | void, tag: K, func: WeyaTemplateFunction): SVGElementTagNameMap[K]
+
+    <K extends keyof SVGElementTagNameMap>(this: WeyaContext | void, tag: K, attrs: AttributesInterface, func: WeyaTemplateFunction): SVGElementTagNameMap[K]
+
+    <K extends keyof SVGElementTagNameMap>(this: WeyaContext | void, tag: K, parent: WeyaElement, attrs: AttributesInterface): SVGElementTagNameMap[K]
+
+    <K extends keyof SVGElementTagNameMap>(this: WeyaContext | void, tag: K, parent: WeyaElement, text: string): SVGElementTagNameMap[K]
+
+    <K extends keyof SVGElementTagNameMap>(this: WeyaContext | void, tag: K, parent: WeyaElement, text: string, attrs: AttributesInterface): SVGElementTagNameMap[K]
+
+    <K extends keyof SVGElementTagNameMap>(this: WeyaContext | void, tag: K, parent: WeyaElement, func: WeyaTemplateFunction): SVGElementTagNameMap[K]
+
+    <K extends keyof SVGElementTagNameMap>(this: WeyaContext | void, tag: K, parent: WeyaElement, attrs: AttributesInterface, func: WeyaTemplateFunction): SVGElementTagNameMap[K]
+
+    // With tag and selector
+    <K extends keyof SVGElementTagNameMap>(this: WeyaContext | void, tag: K, selector: string): SVGElementTagNameMap[K]
+
+    <K extends keyof SVGElementTagNameMap>(this: WeyaContext | void, tag: K, selector: string, parent: WeyaElement): SVGElementTagNameMap[K]
+
+    <K extends keyof SVGElementTagNameMap>(this: WeyaContext | void, tag: K, selector: string, attrs: AttributesInterface): SVGElementTagNameMap[K]
+
+    <K extends keyof SVGElementTagNameMap>(this: WeyaContext | void, tag: K, selector: string, text: string): SVGElementTagNameMap[K]
+
+    <K extends keyof SVGElementTagNameMap>(this: WeyaContext | void, tag: K, selector: string, text: string, attrs: AttributesInterface): SVGElementTagNameMap[K]
+
+    <K extends keyof SVGElementTagNameMap>(this: WeyaContext | void, tag: K, selector: string, func: WeyaTemplateFunction): SVGElementTagNameMap[K]
+
+    <K extends keyof SVGElementTagNameMap>(this: WeyaContext | void, tag: K, selector: string, attrs: AttributesInterface, func: WeyaTemplateFunction): SVGElementTagNameMap[K]
+
+    <K extends keyof SVGElementTagNameMap>(this: WeyaContext | void, tag: K, selector: string, parent: WeyaElement, attrs: AttributesInterface): SVGElementTagNameMap[K]
+
+    <K extends keyof SVGElementTagNameMap>(this: WeyaContext | void, tag: K, selector: string, parent: WeyaElement, text: string): SVGElementTagNameMap[K]
+
+    <K extends keyof SVGElementTagNameMap>(this: WeyaContext | void, tag: K, selector: string, parent: WeyaElement, text: string, attrs: AttributesInterface): SVGElementTagNameMap[K]
+
+    <K extends keyof SVGElementTagNameMap>(this: WeyaContext | void, tag: K, selector: string, parent: WeyaElement, func: WeyaTemplateFunction): SVGElementTagNameMap[K]
+
+    <K extends keyof SVGElementTagNameMap>(this: WeyaContext | void, tag: K, selector: string, parent: WeyaElement, attrs: AttributesInterface, func: WeyaTemplateFunction): SVGElementTagNameMap[K]
+
     // css selector
     (this: WeyaContext | void, selector: string): WeyaElement
 
