@@ -31,50 +31,100 @@ type WeyaElementArg = (string | AttributesInterface | WeyaTemplateFunction | Wey
 
 export interface WeyaElementFunction {
     // Default tag = div
-    (this: WeyaContext | void): WeyaElement
+    (this: WeyaContext | void): HTMLDivElement
 
-    (this: WeyaContext | void, parent: WeyaElement): WeyaElement
+    (this: WeyaContext | void, parent: WeyaElement): HTMLDivElement
 
-    (this: WeyaContext | void, attrs: AttributesInterface): WeyaElement
+    (this: WeyaContext | void, attrs: AttributesInterface): HTMLDivElement
 
-    (this: WeyaContext | void, text: string): WeyaElement
+    (this: WeyaContext | void, text: string): HTMLDivElement
 
-    (this: WeyaContext | void, text: string, attrs: AttributesInterface): WeyaElement
+    (this: WeyaContext | void, text: string, attrs: AttributesInterface): HTMLDivElement
 
-    (this: WeyaContext | void, func: WeyaTemplateFunction): WeyaElement
+    (this: WeyaContext | void, func: WeyaTemplateFunction): HTMLDivElement
 
-    (this: WeyaContext | void, parent: WeyaElement, attrs: AttributesInterface): WeyaElement
+    (this: WeyaContext | void, parent: WeyaElement, attrs: AttributesInterface): HTMLDivElement
 
-    (this: WeyaContext | void, parent: WeyaElement, text: string): WeyaElement
+    (this: WeyaContext | void, parent: WeyaElement, text: string): HTMLDivElement
 
-    (this: WeyaContext | void, parent: WeyaElement, text: string, attrs: AttributesInterface): WeyaElement
+    (this: WeyaContext | void, parent: WeyaElement, text: string, attrs: AttributesInterface): HTMLDivElement
 
-    (this: WeyaContext | void, parent: WeyaElement, func: WeyaTemplateFunction): WeyaElement
+    (this: WeyaContext | void, parent: WeyaElement, func: WeyaTemplateFunction): HTMLDivElement
 
     // With tag
-    (this: WeyaContext | void, tag: string): WeyaElement
+    <K extends keyof HTMLElementTagNameMap>(this: WeyaContext | void, tag: K): HTMLElementTagNameMap[K]
 
-    (this: WeyaContext | void, tag: string, parent: WeyaElement): WeyaElement
+    <K extends keyof HTMLElementTagNameMap>(this: WeyaContext | void, tag: K, parent: WeyaElement): HTMLElementTagNameMap[K]
 
-    (this: WeyaContext | void, tag: string, attrs: AttributesInterface): WeyaElement
+    <K extends keyof HTMLElementTagNameMap>(this: WeyaContext | void, tag: K, attrs: AttributesInterface): HTMLElementTagNameMap[K]
 
-    (this: WeyaContext | void, tag: string, text: string): WeyaElement
+    <K extends keyof HTMLElementTagNameMap>(this: WeyaContext | void, tag: K, text: string): HTMLElementTagNameMap[K]
 
-    (this: WeyaContext | void, tag: string, text: string, attrs: AttributesInterface): WeyaElement
+    <K extends keyof HTMLElementTagNameMap>(this: WeyaContext | void, tag: K, text: string, attrs: AttributesInterface): HTMLElementTagNameMap[K]
 
-    (this: WeyaContext | void, tag: string, func: WeyaTemplateFunction): WeyaElement
+    <K extends keyof HTMLElementTagNameMap>(this: WeyaContext | void, tag: K, func: WeyaTemplateFunction): HTMLElementTagNameMap[K]
 
-    (this: WeyaContext | void, tag: string, attrs: AttributesInterface, func: WeyaTemplateFunction): WeyaElement
+    <K extends keyof HTMLElementTagNameMap>(this: WeyaContext | void, tag: K, attrs: AttributesInterface, func: WeyaTemplateFunction): HTMLElementTagNameMap[K]
 
-    (this: WeyaContext | void, tag: string, parent: WeyaElement, attrs: AttributesInterface): WeyaElement
+    <K extends keyof HTMLElementTagNameMap>(this: WeyaContext | void, tag: K, parent: WeyaElement, attrs: AttributesInterface): HTMLElementTagNameMap[K]
 
-    (this: WeyaContext | void, tag: string, parent: WeyaElement, text: string): WeyaElement
+    <K extends keyof HTMLElementTagNameMap>(this: WeyaContext | void, tag: K, parent: WeyaElement, text: string): HTMLElementTagNameMap[K]
 
-    (this: WeyaContext | void, tag: string, parent: WeyaElement, text: string, attrs: AttributesInterface): WeyaElement
+    <K extends keyof HTMLElementTagNameMap>(this: WeyaContext | void, tag: K, parent: WeyaElement, text: string, attrs: AttributesInterface): HTMLElementTagNameMap[K]
 
-    (this: WeyaContext | void, tag: string, parent: WeyaElement, func: WeyaTemplateFunction): WeyaElement
+    <K extends keyof HTMLElementTagNameMap>(this: WeyaContext | void, tag: K, parent: WeyaElement, func: WeyaTemplateFunction): HTMLElementTagNameMap[K]
 
-    (this: WeyaContext | void, tag: string, parent: WeyaElement, attrs: AttributesInterface, func: WeyaTemplateFunction): WeyaElement
+    <K extends keyof HTMLElementTagNameMap>(this: WeyaContext | void, tag: K, parent: WeyaElement, attrs: AttributesInterface, func: WeyaTemplateFunction): HTMLElementTagNameMap[K]
+
+    // With tag and selector
+    <K extends keyof HTMLElementTagNameMap>(this: WeyaContext | void, tag: K, selector: string): HTMLElementTagNameMap[K]
+
+    <K extends keyof HTMLElementTagNameMap>(this: WeyaContext | void, tag: K, selector: string, parent: WeyaElement): HTMLElementTagNameMap[K]
+
+    <K extends keyof HTMLElementTagNameMap>(this: WeyaContext | void, tag: K, selector: string, attrs: AttributesInterface): HTMLElementTagNameMap[K]
+
+    <K extends keyof HTMLElementTagNameMap>(this: WeyaContext | void, tag: K, selector: string, text: string): HTMLElementTagNameMap[K]
+
+    <K extends keyof HTMLElementTagNameMap>(this: WeyaContext | void, tag: K, selector: string, text: string, attrs: AttributesInterface): HTMLElementTagNameMap[K]
+
+    <K extends keyof HTMLElementTagNameMap>(this: WeyaContext | void, tag: K, selector: string, func: WeyaTemplateFunction): HTMLElementTagNameMap[K]
+
+    <K extends keyof HTMLElementTagNameMap>(this: WeyaContext | void, tag: K, selector: string, attrs: AttributesInterface, func: WeyaTemplateFunction): HTMLElementTagNameMap[K]
+
+    <K extends keyof HTMLElementTagNameMap>(this: WeyaContext | void, tag: K, selector: string, parent: WeyaElement, attrs: AttributesInterface): HTMLElementTagNameMap[K]
+
+    <K extends keyof HTMLElementTagNameMap>(this: WeyaContext | void, tag: K, selector: string, parent: WeyaElement, text: string): HTMLElementTagNameMap[K]
+
+    <K extends keyof HTMLElementTagNameMap>(this: WeyaContext | void, tag: K, selector: string, parent: WeyaElement, text: string, attrs: AttributesInterface): HTMLElementTagNameMap[K]
+
+    <K extends keyof HTMLElementTagNameMap>(this: WeyaContext | void, tag: K, selector: string, parent: WeyaElement, func: WeyaTemplateFunction): HTMLElementTagNameMap[K]
+
+    <K extends keyof HTMLElementTagNameMap>(this: WeyaContext | void, tag: K, selector: string, parent: WeyaElement, attrs: AttributesInterface, func: WeyaTemplateFunction): HTMLElementTagNameMap[K]
+
+    // css selector
+    (this: WeyaContext | void, selector: string): WeyaElement
+
+    (this: WeyaContext | void, selector: string, parent: WeyaElement): WeyaElement
+
+    (this: WeyaContext | void, selector: string, attrs: AttributesInterface): WeyaElement
+
+    (this: WeyaContext | void, selector: string, text: string): WeyaElement
+
+    (this: WeyaContext | void, selector: string, text: string, attrs: AttributesInterface): WeyaElement
+
+    (this: WeyaContext | void, selector: string, func: WeyaTemplateFunction): WeyaElement
+
+    (this: WeyaContext | void, selector: string, attrs: AttributesInterface, func: WeyaTemplateFunction): WeyaElement
+
+    (this: WeyaContext | void, selector: string, parent: WeyaElement, attrs: AttributesInterface): WeyaElement
+
+    (this: WeyaContext | void, selector: string, parent: WeyaElement, text: string): WeyaElement
+
+    (this: WeyaContext | void, selector: string, parent: WeyaElement, text: string, attrs: AttributesInterface): WeyaElement
+
+    (this: WeyaContext | void, selector: string, parent: WeyaElement, func: WeyaTemplateFunction): WeyaElement
+
+    (this: WeyaContext | void, selector: string, parent: WeyaElement, attrs: AttributesInterface, func: WeyaTemplateFunction): WeyaElement
 }
 
 interface WeyaContext {
@@ -140,6 +190,12 @@ function parseDefinition(str: string): ElemDef {
     return res
 }
 
+function isValidTag(str: string): boolean {
+    for(let c of str) {
+        if(c.toLowerCase() !== c && c.toUpperCase() === c)
+            return false
+    }
+}
 function getParameters(args: WeyaElementArg[]) {
     let params: Parameters = {
         def: null,
@@ -150,8 +206,16 @@ function getParameters(args: WeyaElementArg[]) {
     }
     if (args.length == 0) {
         params.def = parseDefinition('div')
-    } else if (typeof (args[0]) == 'string') {
-        params.def = parseDefinition(<string>args[0])
+    } else if (typeof args[0] == 'string') {
+        let arg0 = <string>args[0]
+        if (isValidTag(arg0) && args.length > 1 && (typeof args[1] == 'string')) {
+            const arg1 = <string>args[1]
+            if(arg1.length > 1 && (arg1[0] === '.' || arg1[1] === '#')) {
+                arg0 += arg1
+                args.slice(1)
+            }
+        }
+        params.def = parseDefinition(arg0)
         args = args.slice(1)
     }
 
@@ -304,7 +368,7 @@ function domAPICreate(): WeyaElementFunction {
         return elem
     }
 
-    return append
+    return <WeyaElementFunction>append
 }
 
 export let Weya = domAPICreate()
