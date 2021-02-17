@@ -30,27 +30,6 @@ export interface WeyaTemplateFunction {
 type WeyaElementArg = (string | AttributesInterface | WeyaTemplateFunction | WeyaElement)
 
 export interface WeyaElementFunction {
-    // Default tag = div
-    (this: WeyaContext | void): HTMLDivElement
-
-    (this: WeyaContext | void, parent: WeyaElement): HTMLDivElement
-
-    (this: WeyaContext | void, attrs: AttributesInterface): HTMLDivElement
-
-    (this: WeyaContext | void, text: string): HTMLDivElement
-
-    (this: WeyaContext | void, text: string, attrs: AttributesInterface): HTMLDivElement
-
-    (this: WeyaContext | void, func: WeyaTemplateFunction): HTMLDivElement
-
-    (this: WeyaContext | void, parent: WeyaElement, attrs: AttributesInterface): HTMLDivElement
-
-    (this: WeyaContext | void, parent: WeyaElement, text: string): HTMLDivElement
-
-    (this: WeyaContext | void, parent: WeyaElement, text: string, attrs: AttributesInterface): HTMLDivElement
-
-    (this: WeyaContext | void, parent: WeyaElement, func: WeyaTemplateFunction): HTMLDivElement
-
     // With tag
     <K extends keyof HTMLElementTagNameMap>(this: WeyaContext | void, tag: K): HTMLElementTagNameMap[K]
 
@@ -176,6 +155,27 @@ export interface WeyaElementFunction {
     (this: WeyaContext | void, selector: string, parent: WeyaElement, func: WeyaTemplateFunction): WeyaElement
 
     (this: WeyaContext | void, selector: string, parent: WeyaElement, attrs: AttributesInterface, func: WeyaTemplateFunction): WeyaElement
+
+    // Default tag = div
+    (this: WeyaContext | void): HTMLDivElement
+
+    (this: WeyaContext | void, parent: WeyaElement): HTMLDivElement
+
+    (this: WeyaContext | void, attrs: AttributesInterface): HTMLDivElement
+
+    (this: WeyaContext | void, text: string): HTMLDivElement
+
+    (this: WeyaContext | void, text: string, attrs: AttributesInterface): HTMLDivElement
+
+    (this: WeyaContext | void, func: WeyaTemplateFunction): HTMLDivElement
+
+    (this: WeyaContext | void, parent: WeyaElement, attrs: AttributesInterface): HTMLDivElement
+
+    (this: WeyaContext | void, parent: WeyaElement, text: string): HTMLDivElement
+
+    (this: WeyaContext | void, parent: WeyaElement, text: string, attrs: AttributesInterface): HTMLDivElement
+
+    (this: WeyaContext | void, parent: WeyaElement, func: WeyaTemplateFunction): HTMLDivElement
 }
 
 interface WeyaContext {
@@ -246,6 +246,8 @@ function isValidTag(str: string): boolean {
         if(c.toLowerCase() !== c && c.toUpperCase() === c)
             return false
     }
+
+    return true
 }
 function getParameters(args: WeyaElementArg[]) {
     let params: Parameters = {
@@ -263,7 +265,7 @@ function getParameters(args: WeyaElementArg[]) {
             const arg1 = <string>args[1]
             if(arg1.length > 1 && (arg1[0] === '.' || arg1[1] === '#')) {
                 arg0 += arg1
-                args.slice(1)
+                args = args.slice(1)
             }
         }
         params.def = parseDefinition(arg0)
