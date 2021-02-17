@@ -6,11 +6,11 @@ Here's a small example to show the usage.
 
 ```typescript
 let userElems = []
-$('div.users', document.body, $ => {
+$('div', '.users', document.body, $ => {
     for (let i = 0; i < users.length; ++i) {
-        let userDiv = $('div.user', { on: { click: editUser } }, $ => {
-            let name = $('span.name', users[i])
-            let phone = $("span.phone", phones[i])
+        let userDiv = $('div', '.user', { on: { click: editUser } }, $ => {
+            let name = $('span', '.name', users[i])
+            let phone = $("span', '.phone", phones[i])
         });
         (<any>userDiv).userId = i
         userElems.push({ user: users[i], div: userDiv })
