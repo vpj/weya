@@ -263,7 +263,7 @@ function getParameters(args: WeyaElementArg[]) {
         let arg0 = <string>args[0]
         if (isValidTag(arg0) && args.length > 1 && (typeof args[1] == 'string')) {
             const arg1 = <string>args[1]
-            if(arg1.length > 1 && (arg1[0] === '.' || arg1[1] === '#')) {
+            if(arg1.length > 1 && (arg1[0] === '.' || arg1[0] === '#')) {
                 arg0 += arg1
                 args = args.slice(1)
             }
