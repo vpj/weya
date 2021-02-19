@@ -243,7 +243,7 @@ function parseDefinition(str: string): ElemDef {
 
 function isValidTag(str: string): boolean {
     for(let c of str) {
-        if(c.toLowerCase() !== c && c.toUpperCase() === c)
+        if(c.toLowerCase() !== c || c.toUpperCase() === c)
             return false
     }
 
