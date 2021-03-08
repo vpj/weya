@@ -241,7 +241,13 @@ function parseDefinition(str: string): ElemDef {
     return res
 }
 
+const HEADER_TAGS = {h1: true, h2: true, h3: true, h4: true, h5: true, h6: true}
+
 function isValidTag(str: string): boolean {
+    if(HEADER_TAGS[str] != null) {
+        return true
+    }
+
     for(let c of str) {
         if(c.toLowerCase() !== c || c.toUpperCase() === c)
             return false
