@@ -118,6 +118,7 @@ export class Router {
     }
 
     _extractParameters(route: RegExp, fragment: string) {
+        route.lastIndex = 0
         let params = route.exec(fragment).slice(1)
         let results = []
         for (let p of params) {
