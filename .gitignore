@@ -42,5 +42,7 @@ build
 # Samples
 sample/sample.js
 
+.idea/
+
 dist
 package-lock.json
