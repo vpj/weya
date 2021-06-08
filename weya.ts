@@ -304,7 +304,9 @@ function getParameters(args: WeyaElementArg[], api: DOMWeyaAPI) {
 export function domAPICreate(api: DOMWeyaAPI = null): WeyaElementFunction {
     if (api == null) {
         if (typeof window === 'undefined') {
-            throw new Error('Cannot create DOM API')
+            return <WeyaElementFunction>(() => {
+                throw new Error('Cannot create DOM API')
+            })
         }
 
         api = {
