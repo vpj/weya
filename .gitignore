@@ -44,3 +44,4 @@ sample/sample.js
 
 dist
 package-lock.json
+.idea/
