@@ -1,6 +1,9 @@
-const API = {
-    document: document
+interface DOMWeyaAPI {
+    document?: Document
+    SVGElement?: typeof SVGElement
+    HTMLElement?: typeof HTMLElement
 }
+
 const TAGS = {
     svg: "a altGlyph altGlyphDef altGlyphItem animate animateColor animateMotion animateTransform circle clipPath color-profile cursor defs desc ellipse feBlend feColorMatrix feComponentTransfer feComposite feConvolveMatrix feDiffuseLighting feDisplacementMap feDistantLight feFlood feFuncA feFuncB feFuncG feFuncR feGaussianBlur feImage feMerge feMergeNode feMorphology feOffset fePointLight feSpecularLighting feSpotLight feTile feTurbulence filter font font-face font-face-format font-face-name font-face-src font-face-uri foreignObject g glyph glyphRef hkern image line linearGradient marker mask metadata missing-glyph mpath path pattern polygon polyline radialGradient rect script set stop style svg symbol text textPath title tref tspan use view vkern switch foreignObject",
     html: "a abbr address article aside audio b bdi bdo blockquote body button canvas caption cite code colgroup datalist dd del details dfn div dl dt em fieldset figcaption figure footer form h1 h2 h3 h4 h5 h6 head header hgroup html i iframe ins kbd label legend li main map mark menu meter nav noscript object ol optgroup option output p pre progress q rp rt ruby s samp script section select small span strong style sub summary sup table tbody td textarea tfoot th thead time title tr u ul video",
@@ -81,7 +84,7 @@ export interface WeyaElementFunction {
     <K extends keyof HTMLElementTagNameMap>(this: WeyaContext | void, tag: K, selector: string, parent: WeyaElement, attrs: AttributesInterface, func: WeyaTemplateFunction): HTMLElementTagNameMap[K]
 
     //Repeat for SVG
-        // With tag
+    // With tag
     <K extends keyof SVGElementTagNameMap>(this: WeyaContext | void, tag: K): SVGElementTagNameMap[K]
 
     <K extends keyof SVGElementTagNameMap>(this: WeyaContext | void, tag: K, parent: WeyaElement): SVGElementTagNameMap[K]
@@ -244,18 +247,19 @@ function parseDefinition(str: string): ElemDef {
 const HEADER_TAGS = {h1: true, h2: true, h3: true, h4: true, h5: true, h6: true}
 
 function isValidTag(str: string): boolean {
-    if(HEADER_TAGS[str] != null) {
+    if (HEADER_TAGS[str] != null) {
         return true
     }
 
-    for(let c of str) {
-        if(c.toLowerCase() !== c || c.toUpperCase() === c)
+    for (let c of str) {
+        if (c.toLowerCase() !== c || c.toUpperCase() === c)
             return false
     }
 
     return true
 }
-function getParameters(args: WeyaElementArg[]) {
+
+function getParameters(args: WeyaElementArg[], api: DOMWeyaAPI) {
     let params: Parameters = {
         def: null,
         text: null,
@@ -269,7 +273,7 @@ function getParameters(args: WeyaElementArg[]) {
         let arg0 = <string>args[0]
         if (isValidTag(arg0) && args.length > 1 && (typeof args[1] == 'string')) {
             const arg1 = <string>args[1]
-            if(arg1.length > 1 && (arg1[0] === '.' || arg1[0] === '#')) {
+            if (arg1.length > 1 && (arg1[0] === '.' || arg1[0] === '#')) {
                 arg0 += arg1
                 args = args.slice(1)
             }
@@ -284,7 +288,7 @@ function getParameters(args: WeyaElementArg[]) {
                 params.func = arg as WeyaTemplateFunction
                 break
             case "object":
-                if (arg instanceof HTMLElement || arg instanceof SVGElement) {
+                if (arg instanceof api.HTMLElement || arg instanceof api.SVGElement) {
                     params.parent = arg as WeyaElement
                 } else {
                     params.attrs = arg as AttributesInterface
@@ -297,7 +301,21 @@ function getParameters(args: WeyaElementArg[]) {
     return params
 }
 
-function domAPICreate(): WeyaElementFunction {
+export function domAPICreate(api: DOMWeyaAPI = null): WeyaElementFunction {
+    if (api == null) {
+        if (typeof window === 'undefined') {
+            return <WeyaElementFunction>(() => {
+                throw new Error('Cannot create DOM API')
+            })
+        }
+
+        api = {
+            document: document,
+            SVGElement: SVGElement,
+            HTMLElement: HTMLElement
+        }
+    }
+
     function setStyles(elem: WeyaElement, styles: StylesInterface) {
         for (let k in styles) {
             let v = styles[k]
@@ -369,7 +387,7 @@ function domAPICreate(): WeyaElementFunction {
     }
 
     function switchIdClass() {
-        let elem = API.document.createElementNS("http://www.w3.org/2000/svg", "g")
+        let elem = api.document.createElementNS("http://www.w3.org/2000/svg", "g")
         if (!elem.classList) {
             setIdClass = setIdClassFallback
         } else {
@@ -380,7 +398,7 @@ function domAPICreate(): WeyaElementFunction {
     switchIdClass()
 
     function append(this: WeyaContext, ...args: WeyaElementArg[]): WeyaElement {
-        let params = getParameters(args)
+        let params = getParameters(args, api)
 
         let parent = params.parent
         if (this != null && this._elem != null) {
@@ -400,9 +418,9 @@ function domAPICreate(): WeyaElementFunction {
             let ns = NAMESPACES[TAGS_DICT[tag]]
 
             if (ns != null) {
-                elem = API.document.createElementNS(ns, tag) as WeyaElement
+                elem = api.document.createElementNS(ns, tag) as WeyaElement
             } else {
-                elem = API.document.createElement(tag)
+                elem = api.document.createElement(tag)
             }
 
             if (params.def != null) {
