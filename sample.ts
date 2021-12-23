@@ -1,4 +1,4 @@
-import { Weya as $ } from './weya'
+import {Weya as $} from './weya'
 
 let buttons = []
 
@@ -17,12 +17,12 @@ let phones = ['111', '222', '333']
 let userElems = []
 $('div.users', document.body, $ => {
     for (let i = 0; i < users.length; ++i) {
-        let userDiv = $('div.user', { on: { click: editUser } }, $ => {
+        let userDiv = $('div.user', {on: {click: editUser}}, $ => {
             let name = $('span.name', users[i])
             let phone = $("span.phone", phones[i])
         });
         (<any>userDiv).userId = i
-        userElems.push({ user: users[i], div: userDiv })
+        userElems.push({user: users[i], div: userDiv})
     }
 })
 
