@@ -81,7 +81,7 @@ export interface WeyaElementFunction {
     <K extends keyof HTMLElementTagNameMap>(this: WeyaContext | void, tag: K, selector: string, parent: WeyaElement, attrs: AttributesInterface, func: WeyaTemplateFunction): HTMLElementTagNameMap[K]
 
     //Repeat for SVG
-        // With tag
+    // With tag
     <K extends keyof SVGElementTagNameMap>(this: WeyaContext | void, tag: K): SVGElementTagNameMap[K]
 
     <K extends keyof SVGElementTagNameMap>(this: WeyaContext | void, tag: K, parent: WeyaElement): SVGElementTagNameMap[K]
@@ -244,17 +244,18 @@ function parseDefinition(str: string): ElemDef {
 const HEADER_TAGS = {h1: true, h2: true, h3: true, h4: true, h5: true, h6: true}
 
 function isValidTag(str: string): boolean {
-    if(HEADER_TAGS[str] != null) {
+    if (HEADER_TAGS[str] != null) {
         return true
     }
 
-    for(let c of str) {
-        if(c.toLowerCase() !== c || c.toUpperCase() === c)
+    for (let c of str) {
+        if (c.toLowerCase() !== c || c.toUpperCase() === c)
             return false
     }
 
     return true
 }
+
 function getParameters(args: WeyaElementArg[]) {
     let params: Parameters = {
         def: null,
@@ -269,7 +270,7 @@ function getParameters(args: WeyaElementArg[]) {
         let arg0 = <string>args[0]
         if (isValidTag(arg0) && args.length > 1 && (typeof args[1] == 'string')) {
             const arg1 = <string>args[1]
-            if(arg1.length > 1 && (arg1[0] === '.' || arg1[0] === '#')) {
+            if (arg1.length > 1 && (arg1[0] === '.' || arg1[0] === '#')) {
                 arg0 += arg1
                 args = args.slice(1)
             }
@@ -431,3 +432,4 @@ function domAPICreate(): WeyaElementFunction {
 }
 
 export let Weya = domAPICreate()
+
