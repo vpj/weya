@@ -219,7 +219,7 @@ class Controller {
         } else if (this.wantsHashChange && (window.onhashchange != null)) {
             window.onhashchange = this.checkUrl
         } else if (this.wantsHashChange) {
-            this.checkUrlInterval = setInterval(this.checkUrl, this.interval)
+            this.checkUrlInterval = window.setInterval(this.checkUrl, this.interval)
         }
 
         this.fragment = this.getFragment()
